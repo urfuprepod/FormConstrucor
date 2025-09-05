@@ -4,6 +4,7 @@ import { useFormGenerator } from "../entities/FormConstructor/hooks";
 import { Col, Row } from "antd";
 import ComponentPalette from "@/widgets/Palette";
 import FormConstructor from "@/widgets/FormConstructor";
+import './main.css'
 
 function App() {
     const { formGenerator, unshiftNewField, pushNewField, removeField } =

@@ -12,7 +12,7 @@ const FieldWithButton: FC<Props> = (props) => {
     const { field, buttonsBlock } = props;
 
     return (
-        <Flex gap={7} align="center">
+        <Flex gap={7} align="end">
             <FormFieldFabric {...field} />
             {buttonsBlock}
         </Flex>

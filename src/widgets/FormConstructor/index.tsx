@@ -4,6 +4,7 @@ import { type IFormConstructor } from "@/entities/FormConstructor/types";
 import { downloadJson } from "@/shared/methods";
 import { DeleteButton, FieldWithButton } from "@/shared/components";
 import { Trash2 } from "lucide-react";
+import styles from './styles.module.css'
 
 type Props = {
     formGenerator: IFormConstructor;
@@ -16,7 +17,7 @@ const FormConstructor: FC<Props> = (props) => {
     const [form] = Form.useForm();
 
     return (
-        <Form layout="vertical" form={form} wrapperCol={{ span: 16 }}>
+        <Form className={styles.form} layout="vertical" form={form} wrapperCol={{ span: 8 }}>
             {formGenerator.fields.map((field) => (
                 <FieldWithButton
                     field={field}

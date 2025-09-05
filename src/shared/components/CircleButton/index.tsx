@@ -34,5 +34,5 @@ export const AddButton = partialProps(Button, {
 });
 
 export const DeleteButton = partialProps(Button, {
-    primaryColor: "#e22739;",
+    primaryColor: "#e22739",
 });

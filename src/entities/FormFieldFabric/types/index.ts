@@ -1,7 +1,7 @@
 export interface ILabelProps {
-    fontSize: number;
-    color: string;
-    value: string;
+    fontSize?: number;
+    color?: string;
+    value?: string;
 }
 
 export interface IFieldOptions {

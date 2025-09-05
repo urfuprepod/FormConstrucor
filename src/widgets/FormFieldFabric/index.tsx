@@ -1,4 +1,4 @@
-import React, { type FC } from "react";
+import { type FC } from "react";
 import { type Field } from "@/entities/FormFieldFabric/types";
 import { Form } from "antd";
 import Input from "./Input";
@@ -14,9 +14,15 @@ const FormFieldFabric: FC<Props> = (props) => {
             name={name}
             label={label?.value}
             labelCol={{
-                span: 6,
-                style: { fontSize: label?.fontSize, color: label?.color },
+                span: 24,
+                style: {
+                    fontSize: label?.fontSize,
+                    color: label?.color,
+                    fontWeight: 500,
+                },
             }}
+            style={{ marginBottom: 0, flex: "1 1 auto" }}
+            wrapperCol={{ span: 24, style: { width: "100%" } }}
         >
             <Field {...props} />
         </Form.Item>
@@ -28,7 +34,7 @@ const Field: FC<Props> = (props) => {
         case "input":
             return <Input {...props.options} />;
         case "select":
-            return <Select {...props.options} />
+            return <Select {...props.options} />;
 
         default:
             // TypeScript обеспечит exhaustiveness checking

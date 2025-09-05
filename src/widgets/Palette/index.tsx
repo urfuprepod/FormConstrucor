@@ -15,7 +15,7 @@ const ComponentPalette: FC<Props> = React.memo((props) => {
             <PaletteItem
                 field={{
                     variant: "input",
-                    options: { isDisabled: true, name: "" },
+                    options: { name: "", label: { value: "Input label" } },
                 }}
                 {...props}
             />
@@ -23,7 +23,11 @@ const ComponentPalette: FC<Props> = React.memo((props) => {
             <PaletteItem
                 field={{
                     variant: "select",
-                    options: { isDisabled: true, name: "", options: [{label: 'Test', value: 'Test'}] },
+                    options: {
+                        name: "",
+                        label: { value: "Select label" },
+                        options: [{ label: "Test", value: "Test" }],
+                    },
                 }}
                 {...props}
             />
