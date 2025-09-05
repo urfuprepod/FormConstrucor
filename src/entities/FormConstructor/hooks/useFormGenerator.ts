@@ -25,6 +25,27 @@ export const useFormGenerator = (baseFields?: Field[]) => {
         [setData]
     );
 
+    function updateField(
+        positionNumber: number,
+        updatedField:  Field
+    ) {
+        const item = data.fields.find((el) => el.position === positionNumber);
+        if (!item) return;
+
+        if (item.variant !== updatedField.variant) return;
+
+        setData((prev) => {
+            const actualFields = data.fields.map((field) =>
+                field.position === positionNumber
+                    ? {...updatedField, position: field.position}
+                    : field
+            );
+
+            return { ...prev, fields:actualFields };
+        });
+
+    }
+
     // добавляем элемент в начало - увеличиваем порядковый номер у всех остальных полей
     const unshiftNewField = useCallback(
         (field: Field) => {
@@ -62,5 +83,5 @@ export const useFormGenerator = (baseFields?: Field[]) => {
         });
     };
 
-    return { formGenerator: data, pushNewField, removeField, unshiftNewField };
+    return { formGenerator: data, pushNewField, removeField, unshiftNewField, updateField };
 };

@@ -7,7 +7,7 @@ import Select from "./Select";
 type Props = Field;
 
 const FormFieldFabric: FC<Props> = (props) => {
-    const { label, name } = props.options;
+    const { label, name, required } = props.options;
 
     return (
         <Form.Item
@@ -21,6 +21,7 @@ const FormFieldFabric: FC<Props> = (props) => {
                     fontWeight: 500,
                 },
             }}
+            rules={[{ required: !!required, message: "Поле обязательно" }]}
             style={{ marginBottom: 0, flex: "1 1 auto" }}
             wrapperCol={{ span: 24, style: { width: "100%" } }}
         >

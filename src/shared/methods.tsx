@@ -26,3 +26,11 @@ export function partialProps<P extends object, K extends keyof P>(
         return <Component {...partial} {...(props as P)} />;
     };
 }
+
+export function updateField<T extends object, K extends keyof T>(
+    obj: T,
+    key: K,
+    val: T[K]
+): T {
+    return { ...obj, [key]: val };
+}

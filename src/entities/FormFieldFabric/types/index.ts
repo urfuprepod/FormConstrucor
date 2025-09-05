@@ -1,14 +1,15 @@
 export interface ILabelProps {
     fontSize?: number;
-    color?: string;
+    color: string;
     value?: string;
 }
 
 export interface IFieldOptions {
     placeholder?: string;
-    label?: ILabelProps;
+    label: ILabelProps;
     isDisabled?: boolean;
     name: string;
+    required?: boolean;
 }
 
 export interface ISelectOption {
@@ -30,12 +31,10 @@ export interface InputOptions extends IFieldOptions {
     type?: "text" | "password" | "email" | "number";
     maxLength?: number;
     minLength?: number;
-    required?: boolean;
 }
 
 export interface SelectOptions extends IFieldOptions {
     options: ISelectOption[];
     multiple?: boolean;
-    required?: boolean;
     notFoundContent?: React.ReactNode;
 }
