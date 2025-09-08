@@ -1,3 +1,3 @@
-import { useFormGenerator } from "./useFormGenerator";
+import { useComponentConfig } from "./useComponentConfig";
 
-export { useFormGenerator };
+export { useComponentConfig };

@@ -1,19 +1,24 @@
-import type { Field } from "@/entities/FormFieldFabric/types";
-import FormFieldFabric from "@/widgets/FormFieldFabric";
+import FormFieldFabric from "@/shared/FormFieldFabric";
+import type { SettingsField, ComponentConfig, Ahue } from "@/shared/types";
 import { Flex } from "antd";
-import React, { type FC } from "react";
+import React from "react";
 
-type Props = {
-    field: Field;
+type Props<T extends readonly SettingsField[]> = {
+    Component: ComponentConfig<T>["Component"];
+    fieldValues: Ahue<T>;
     buttonsBlock?: React.ReactNode;
 };
 
-const FieldWithButton: FC<Props> = (props) => {
-    const { field, buttonsBlock } = props;
-
+const FieldWithButton = <T extends readonly SettingsField[]>(
+    props: Props<T>
+) => {
+    const { Component, fieldValues, buttonsBlock } = props;
     return (
         <Flex gap={7} align="end">
-            <FormFieldFabric {...field} />
+            <FormFieldFabric
+                Component={Component}
+                fieldValues={fieldValues}
+            />
             {buttonsBlock}
         </Flex>
     );

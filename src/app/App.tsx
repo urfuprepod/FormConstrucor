@@ -1,6 +1,5 @@
 import "@ant-design/v5-patch-for-react-19";
-
-import { useFormGenerator } from "../entities/FormConstructor/hooks";
+import { useComponentConfig } from "../entities/FormConstructor/hooks";
 import { Col, ConfigProvider, Row } from "antd";
 import ComponentPalette from "@/widgets/Palette";
 import FormConstructor from "@/widgets/FormConstructor";
@@ -9,24 +8,25 @@ import SettingsEditor from "@/widgets/SettingsEditor";
 import { useState } from "react";
 
 function App() {
-    const {
-        formGenerator,
-        unshiftNewField,
-        pushNewField,
-        removeField,
-        updateField,
-    } = useFormGenerator();
-
     const [activePositionNumber, setActivePositionNumber] = useState<
         number | null
     >(null);
+
+    const {
+        fields,
+        pushNewField,
+        unshiftNewField,
+        updateField,
+        activeField,
+        removeField,
+    } = useComponentConfig(activePositionNumber);
 
     return (
         <ConfigProvider
             theme={{
                 components: {
                     Form: {
-                        itemMarginBottom: 0, // Глобально убираем отступы
+                        itemMarginBottom: 0,
                     },
                 },
             }}
@@ -40,19 +40,17 @@ function App() {
                 </Col>
                 <Col span={12}>
                     <FormConstructor
-                        formGenerator={formGenerator}
+                        formComponentsState={fields}
                         onRemoveField={removeField}
                         onPickFieldActive={setActivePositionNumber}
                     />
                 </Col>
 
                 <Col span={6}>
-                    {activePositionNumber !== null && (
+                    {activeField && (
                         <SettingsEditor
-                            activeItem={
-                                formGenerator.fields[activePositionNumber]
-                            }
                             updateField={updateField}
+                            activeItem={activeField}
                         />
                     )}
                 </Col>

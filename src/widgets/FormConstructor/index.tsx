@@ -1,21 +1,22 @@
 import { Button, Form } from "antd";
-import { type FC } from "react";
-import { type IFormConstructor } from "@/entities/FormConstructor/types";
+import { useMemo, type FC } from "react";
 import { downloadJson } from "@/shared/methods";
 import { AddButton, DeleteButton, FieldWithButton } from "@/shared/components";
 import { ThumbsUp, Trash2 } from "lucide-react";
 import styles from "./styles.module.css";
+import type { ComponentConfigArray } from "@/shared/types";
 
 type Props = {
-    formGenerator: IFormConstructor;
+    formComponentsState: ComponentConfigArray;
     onRemoveField: (positionNumber: number) => void;
     onPickFieldActive: (positionNumber: number) => void;
 };
 
 const FormConstructor: FC<Props> = (props) => {
-    const { formGenerator, onPickFieldActive, onRemoveField } = props;
+    const { formComponentsState, onPickFieldActive, onRemoveField } = props;
 
     const [form] = Form.useForm();
+
 
     return (
         <Form
@@ -24,15 +25,15 @@ const FormConstructor: FC<Props> = (props) => {
             form={form}
             wrapperCol={{ span: 8 }}
         >
-            {formGenerator.fields.map((field) => (
+            {formComponentsState.map((config) => (
                 <FieldWithButton
-                    field={field}
-                    key={field.position}
+                    Component={config.Component}
+                    fieldValues={config.data}
+                    key={config.position}
                     buttonsBlock={
                         <>
-                            {" "}
                             <DeleteButton
-                                onClick={() => onRemoveField(field.position)}
+                                onClick={() => onRemoveField(config.position)}
                                 icon={
                                     <Trash2
                                         size={16}
@@ -43,7 +44,7 @@ const FormConstructor: FC<Props> = (props) => {
                             />
                             <AddButton
                                 onClick={() =>
-                                    onPickFieldActive(field.position)
+                                    onPickFieldActive(config.position)
                                 }
                                 icon={
                                     <ThumbsUp
@@ -59,7 +60,7 @@ const FormConstructor: FC<Props> = (props) => {
             ))}
 
             <Button
-                onClick={() => downloadJson(formGenerator)}
+                onClick={() => downloadJson({ fields: formComponentsState })}
                 type="primary"
                 htmlType="submit"
             >

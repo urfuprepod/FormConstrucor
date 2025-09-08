@@ -1,34 +1,31 @@
 import { Flex } from "antd";
 import styles from "./styles.module.css";
 import { PaletteItem } from "@/entities/Palette/components";
-import type { Field } from "@/entities/FormFieldFabric/types";
 import React, { type FC } from "react";
+import type { ComponentConfig, SettingsField } from "@/shared/types";
+import { Input, Select } from "@/entities/FormConstructor/config";
+import { inputSettings } from "@/entities/FormConstructor/config/Input/settings";
+import { selectSettings } from "@/entities/FormConstructor/config/Select/settings";
 
 type Props = {
-    onPushField: (field: Field) => void;
-    onUnshiftField: (field: Field) => void;
+    onPushField: <T extends readonly SettingsField[]>(
+        component: ComponentConfig<T>
+    ) => void;
+    onUnshiftField: <T extends readonly SettingsField[]>(
+        component: ComponentConfig<T>
+    ) => void;
 };
 
 const ComponentPalette: FC<Props> = React.memo((props) => {
     return (
         <Flex vertical gap={12} className={styles.palette}>
             <PaletteItem
-                field={{
-                    variant: "input",
-                    options: { name: "", label: { value: "Input label" } },
-                }}
+                config={{ Component: Input, settings: inputSettings }}
                 {...props}
             />
 
             <PaletteItem
-                field={{
-                    variant: "select",
-                    options: {
-                        name: "",
-                        label: { value: "Select label" },
-                        options: [{ label: "Test", value: "Test" }],
-                    },
-                }}
+                config={{ Component: Select, settings: selectSettings }}
                 {...props}
             />
         </Flex>

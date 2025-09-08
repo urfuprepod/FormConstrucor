@@ -1,4 +1,8 @@
 import type { FC } from "react";
+import type {
+    SettingsField,
+    ObjectSettingsFormType,
+} from "./types";
 
 export function downloadJson(data: object, filename = "form") {
     const jsonString = JSON.stringify(data, null, 2);
@@ -27,10 +31,18 @@ export function partialProps<P extends object, K extends keyof P>(
     };
 }
 
-export function updateField<T extends object, K extends keyof T>(
-    obj: T,
-    key: K,
-    val: T[K]
-): T {
-    return { ...obj, [key]: val };
-}
+export const getSettingsValues = <T extends readonly SettingsField[]>(
+    settings: T
+): ObjectSettingsFormType<T> => {
+    return settings.reduce((acc, field) => {
+        const defaultValue = field.defaultValue as NonNullable<
+            T[number]["defaultValue"]
+        >;
+
+        return {
+            ...acc,
+            [field.propertyName]: defaultValue,
+        };
+    }, {} as ObjectSettingsFormType<T>);
+};
+
