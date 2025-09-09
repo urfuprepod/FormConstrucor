@@ -1,8 +1,8 @@
-import type { Ahue } from "@/shared/types";
+import type { Arch } from "@/shared/types";
 import type { InputSettingsProps } from "./settings";
 import { Input as BaseInput } from "antd";
 
-type Props = Ahue<InputSettingsProps>;
+type Props = Arch<InputSettingsProps>;
 
 const Input = (props: Props) => {
     const {borderWidth, name, isDisabled, placeholder } = props;

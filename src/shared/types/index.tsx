@@ -26,13 +26,15 @@ export type SettingsField<
     labelText: string;
 };
 
-export type ObjectSettingsFormType<T extends readonly SettingsField[]> = {
+export type SettingsFieldsStatic = readonly SettingsField[]
+
+export type ObjectSettingsFormType<T extends SettingsFieldsStatic> = {
     [K in T[number]["propertyName"]]: NonNullable<
         GetFieldValueType<Extract<T[number], { propertyName: K }>["type"]>
     >;
 };
 
-export type Ahue<T extends readonly SettingsField[]> = {
+export type Arch<T extends SettingsFieldsStatic> = {
     [K in T[number]["propertyName"]]: NonNullable<
         GetFieldValueType<Extract<T[number], { propertyName: K }>["type"]>
     >;
@@ -44,18 +46,18 @@ export type Ahue<T extends readonly SettingsField[]> = {
     >;
 };
 
-type ConfigComponent<T extends readonly SettingsField[]> = React.ComponentType<
-    Ahue<T>
+type ConfigComponent<T extends SettingsFieldsStatic> = React.ComponentType<
+    Arch<T>
 >;
 
-export type ComponentConfig<T extends readonly SettingsField[]> = {
+export type ComponentConfig<T extends SettingsFieldsStatic> = {
     Component: ConfigComponent<T>;
     settings: T;
 };
 
-export type ComponentConfigWithState<T extends readonly SettingsField[]> =
-    ComponentConfig<T> & { position: number; data: Ahue<T> };
+export type ComponentConfigWithState<T extends SettingsFieldsStatic> =
+    ComponentConfig<T> & { position: number; data: Arch<T> };
 
 export type ComponentConfigArray = Array<
-    ComponentConfigWithState<readonly SettingsField[]>
+    ComponentConfigWithState<SettingsFieldsStatic>
 >;

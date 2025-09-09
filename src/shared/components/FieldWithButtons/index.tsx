@@ -1,24 +1,23 @@
 import FormFieldFabric from "@/shared/FormFieldFabric";
-import type { SettingsField, ComponentConfig, Ahue } from "@/shared/types";
+import type {
+    ComponentConfig,
+    Arch,
+    SettingsFieldsStatic,
+} from "@/shared/types";
 import { Flex } from "antd";
 import React from "react";
 
-type Props<T extends readonly SettingsField[]> = {
+type Props<T extends SettingsFieldsStatic> = {
     Component: ComponentConfig<T>["Component"];
-    fieldValues: Ahue<T>;
+    fieldValues: Arch<T>;
     buttonsBlock?: React.ReactNode;
 };
 
-const FieldWithButton = <T extends readonly SettingsField[]>(
-    props: Props<T>
-) => {
+const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
     const { Component, fieldValues, buttonsBlock } = props;
     return (
         <Flex gap={7} align="end">
-            <FormFieldFabric
-                Component={Component}
-                fieldValues={fieldValues}
-            />
+            <FormFieldFabric Component={Component} fieldValues={fieldValues} />
             {buttonsBlock}
         </Flex>
     );

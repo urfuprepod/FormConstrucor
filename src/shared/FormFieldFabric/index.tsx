@@ -2,17 +2,18 @@ import { Form } from "antd";
 import type {
     SettingsField,
     ComponentConfig,
-    Ahue,
+    Arch,
+    SettingsFieldsStatic,
 } from "../types";
 import { commonPropsToObjectForm } from "@/entities/FormConstructor/constants";
 import React from "react";
 
-type Props<T extends readonly SettingsField[]> = {
+type Props<T extends SettingsFieldsStatic> = {
     Component: ComponentConfig<T>["Component"];
-    fieldValues: Ahue<T>;
+    fieldValues: Arch<T>;
 };
 
-const FormFieldFabric = <T extends readonly SettingsField[]>(props: Props<T>) => {
+const FormFieldFabric = <T extends SettingsFieldsStatic>(props: Props<T>) => {
     const { Component, fieldValues } = props;
 
     return (

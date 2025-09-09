@@ -1,10 +1,10 @@
 import { getSettingsValues } from "@/shared/methods";
 import type {
-    Ahue,
+    Arch,
     ComponentConfig,
     ComponentConfigArray,
     ComponentConfigWithState,
-    SettingsField,
+    SettingsFieldsStatic,
 } from "@/shared/types";
 import { useMemo, useState } from "react";
 import { commonPropsToObjectForm } from "../constants";
@@ -12,7 +12,7 @@ import { commonPropsToObjectForm } from "../constants";
 export function useComponentConfig(activePositionNumber: number | null) {
     const [fields, setFields] = useState<ComponentConfigArray>([]);
 
-    const pushNewField = <T extends readonly SettingsField[]>(
+    const pushNewField = <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>
     ) => {
         setFields((prev) => [
@@ -25,11 +25,11 @@ export function useComponentConfig(activePositionNumber: number | null) {
                     ...getSettingsValues([...config.settings]),
                     ...commonPropsToObjectForm,
                 },
-            } as ComponentConfigWithState<readonly SettingsField[]>,
+            } as ComponentConfigWithState<SettingsFieldsStatic>,
         ]);
     };
 
-    const unshiftNewField = <T extends readonly SettingsField[]>(
+    const unshiftNewField = <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>
     ) => {
         setFields((prev) => {
@@ -42,7 +42,7 @@ export function useComponentConfig(activePositionNumber: number | null) {
                         ...getSettingsValues([...config.settings]),
                         ...commonPropsToObjectForm,
                     },
-                } as ComponentConfigWithState<readonly SettingsField[]>,
+                } as ComponentConfigWithState<SettingsFieldsStatic>,
                 ...prev.map((item) => ({
                     ...item,
                     position: item.position + 1,
@@ -53,15 +53,13 @@ export function useComponentConfig(activePositionNumber: number | null) {
         });
     };
 
-    const updateField = <T extends readonly SettingsField[]>(
+    const updateField = <T extends SettingsFieldsStatic>(
         positionNumber: number,
-        data: Ahue<T>
+        data: Arch<T>
     ) => {
         setFields((prev) =>
             prev.map((field) =>
-                field.position === positionNumber
-                    ? { ...field, data }
-                    : field
+                field.position === positionNumber ? { ...field, data } : field
             )
         );
     };

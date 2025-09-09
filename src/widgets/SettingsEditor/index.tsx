@@ -1,15 +1,15 @@
 import { commonProps } from "@/entities/FormConstructor/constants";
 import { getSettingsValues } from "@/shared/methods";
-import type { Ahue, ComponentConfigArray, SettingsField } from "@/shared/types";
+import type { Arch, ComponentConfigArray, SettingsField, SettingsFieldsStatic } from "@/shared/types";
 import { Checkbox, Form, Input, Select } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
 import { useMemo, type FC } from "react";
 
 type Props = {
     activeItem: ComponentConfigArray[number];
-    updateField: <T extends readonly SettingsField[]>(
+    updateField: <T extends SettingsFieldsStatic>(
         positionNumber: number,
-        data: Ahue<T>
+        data: Arch<T>
     ) => void;
 };
 

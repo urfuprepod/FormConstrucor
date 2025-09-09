@@ -2,16 +2,16 @@ import { Flex } from "antd";
 import styles from "./styles.module.css";
 import { PaletteItem } from "@/entities/Palette/components";
 import React, { type FC } from "react";
-import type { ComponentConfig, SettingsField } from "@/shared/types";
+import type { ComponentConfig, SettingsFieldsStatic, } from "@/shared/types";
 import { Input, Select } from "@/entities/FormConstructor/config";
 import { inputSettings } from "@/entities/FormConstructor/config/Input/settings";
 import { selectSettings } from "@/entities/FormConstructor/config/Select/settings";
 
 type Props = {
-    onPushField: <T extends readonly SettingsField[]>(
+    onPushField: <T extends SettingsFieldsStatic>(
         component: ComponentConfig<T>
     ) => void;
-    onUnshiftField: <T extends readonly SettingsField[]>(
+    onUnshiftField: <T extends SettingsFieldsStatic>(
         component: ComponentConfig<T>
     ) => void;
 };
