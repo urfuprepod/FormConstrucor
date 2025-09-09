@@ -1,6 +1,11 @@
 import { commonProps } from "@/entities/FormConstructor/constants";
 import { getSettingsValues } from "@/shared/methods";
-import type { Arch, ComponentConfigArray, SettingsField, SettingsFieldsStatic } from "@/shared/types";
+import type {
+    Arch,
+    ComponentConfigArray,
+    SettingsField,
+    SettingsFieldsStatic,
+} from "@/shared/types";
 import { Checkbox, Form, Input, Select } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
 import { useMemo, type FC } from "react";
@@ -18,7 +23,7 @@ const SettingsEditor: FC<Props> = (props) => {
 
     const { activeItem, updateField } = props;
 
-    const onValuesChange = (_: any, allValues: any) => {
+    const onValuesChange = (_: any, allValues: Arch<SettingsFieldsStatic>) => {
         updateField(activeItem.position, allValues);
     };
 
@@ -32,7 +37,7 @@ const SettingsEditor: FC<Props> = (props) => {
     }, [activeItem.settings]);
 
     return (
-        <Form
+        <Form<Arch<SettingsFieldsStatic>>
             onValuesChange={onValuesChange}
             form={form}
             initialValues={finalSettings.initialValues}

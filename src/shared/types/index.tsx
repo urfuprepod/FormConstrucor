@@ -26,7 +26,21 @@ export type SettingsField<
     labelText: string;
 };
 
-export type SettingsFieldsStatic = readonly SettingsField[]
+export type SettingsFieldsStatic = readonly FieldProps[];
+
+type InputFieldProps = SettingsField<"input">;
+
+type NumberFieldProps = SettingsField<"number">;
+
+type CheckboxFieldProps = SettingsField<"checkbox">;
+
+type SelectFieldProps = SettingsField<"select">;
+
+export type FieldProps =
+    | InputFieldProps
+    | NumberFieldProps
+    | CheckboxFieldProps
+    | SelectFieldProps;
 
 export type ObjectSettingsFormType<T extends SettingsFieldsStatic> = {
     [K in T[number]["propertyName"]]: NonNullable<
