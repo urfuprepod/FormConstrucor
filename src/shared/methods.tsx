@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { ObjectSettingsFormType, SettingsFieldsStatic } from "./types";
+import type { ObjectSettingsFormType, SettingsFieldsStatic } from "./types/constructor";
 
 export function downloadJson(data: object, filename = "form") {
     const jsonString = JSON.stringify(data, null, 2);

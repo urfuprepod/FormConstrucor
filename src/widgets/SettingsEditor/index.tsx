@@ -5,7 +5,7 @@ import type {
     ComponentConfigArray,
     SettingsField,
     SettingsFieldsStatic,
-} from "@/shared/types";
+} from "@/shared/types/constructor";
 import { Checkbox, Form, Input, Select } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
 import { useMemo, type FC } from "react";

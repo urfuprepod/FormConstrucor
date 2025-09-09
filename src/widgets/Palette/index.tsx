@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import styles from "./styles.module.css";
 import { PaletteItem } from "@/entities/Palette/components";
 import React, { type FC } from "react";
-import type { ComponentConfig, SettingsFieldsStatic, } from "@/shared/types";
+import type { ComponentConfig, SettingsFieldsStatic, } from "@/shared/types/constructor";
 import { Input, Select } from "@/entities/FormConstructor/config";
 import { inputSettings } from "@/entities/FormConstructor/config/Input/settings";
 import { selectSettings } from "@/entities/FormConstructor/config/Select/settings";

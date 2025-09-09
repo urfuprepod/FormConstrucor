@@ -1,7 +1,7 @@
 import { commonPropsToObjectForm } from "@/entities/FormConstructor/constants";
 import { AddButton, FieldWithButton } from "@/shared/components";
 import { getSettingsValues } from "@/shared/methods";
-import type { ComponentConfig, SettingsFieldsStatic } from "@/shared/types";
+import type { ComponentConfig, SettingsFieldsStatic } from "@/shared/types/constructor";
 import { MoveUp, Plus } from "lucide-react";
 
 type Props<T extends SettingsFieldsStatic> = {

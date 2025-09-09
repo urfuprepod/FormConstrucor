@@ -5,7 +5,7 @@ import type {
     ComponentConfigArray,
     ComponentConfigWithState,
     SettingsFieldsStatic,
-} from "@/shared/types";
+} from "@/shared/types/constructor";
 import { useMemo, useState } from "react";
 import { commonPropsToObjectForm } from "../constants";
 

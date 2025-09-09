@@ -1,4 +1,4 @@
-import type { Arch } from "@/shared/types";
+import type { Arch } from "@/shared/types/constructor";
 import { Select as BaseSelect } from "antd";
 import { type FC } from "react";
 import type { SelectSettingsProps } from "./settings";

@@ -4,7 +4,7 @@ import type {
     ComponentConfig,
     Arch,
     SettingsFieldsStatic,
-} from "../types";
+} from "../types/constructor";
 import { commonPropsToObjectForm } from "@/entities/FormConstructor/constants";
 import React from "react";
 

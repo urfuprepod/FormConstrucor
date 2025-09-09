@@ -4,7 +4,7 @@ import { downloadJson } from "@/shared/methods";
 import { AddButton, DeleteButton, FieldWithButton } from "@/shared/components";
 import { ThumbsUp, Trash2 } from "lucide-react";
 import styles from "./styles.module.css";
-import type { ComponentConfigArray } from "@/shared/types";
+import type { ComponentConfigArray } from "@/shared/types/constructor";
 
 type Props = {
     formComponentsState: ComponentConfigArray;

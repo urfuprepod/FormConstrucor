@@ -1,4 +1,4 @@
-import type { Arch } from "@/shared/types";
+import type { Arch } from "@/shared/types/constructor";
 import type { InputSettingsProps } from "./settings";
 import { Input as BaseInput } from "antd";
 

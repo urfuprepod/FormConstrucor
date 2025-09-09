@@ -3,7 +3,7 @@ import type {
     ComponentConfig,
     Arch,
     SettingsFieldsStatic,
-} from "@/shared/types";
+} from "@/shared/types/constructor";
 import { Flex } from "antd";
 import React from "react";
 
