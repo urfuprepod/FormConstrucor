@@ -8,3 +8,4 @@ export const inputSettings = [
 ] as const;
 
 export type InputSettingsProps = typeof inputSettings;
+export const componentName: string = 'Input';

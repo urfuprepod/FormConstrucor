@@ -1,0 +1,8 @@
+.flex-inline {
+    width: 100%;
+}
+
+.flex-inline > * {
+    width: fit-content !important;
+    flex: 1 1 auto !important; 
+}

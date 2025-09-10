@@ -6,13 +6,14 @@ import type { SelectSettingsProps } from "./settings";
 type Props = Arch<SelectSettingsProps>;
 
 const Select: FC<Props> = (props) => {
-    const { notFoundContent, name, placeholder, isDisabled } = props;
+    const { notFoundContent, loading, name, placeholder, isDisabled } = props;
 
     return (
         <BaseSelect
             id={name}
             notFoundContent={notFoundContent || "Не найдено"}
             disabled={isDisabled}
+            loading={loading}
             optionFilterProp="label"
             placeholder={placeholder || 'Выберите'}
         />

@@ -1,5 +1,9 @@
 import type { FC } from "react";
-import type { ObjectSettingsFormType, SettingsFieldsStatic } from "./types/constructor";
+import type {
+    ComponentConfig,
+    ObjectSettingsFormType,
+    SettingsFieldsStatic,
+} from "./types/constructor";
 
 export function downloadJson(data: object, filename = "form") {
     const jsonString = JSON.stringify(data, null, 2);
@@ -42,3 +46,12 @@ export const getSettingsValues = <T extends SettingsFieldsStatic>(
         };
     }, {} as ObjectSettingsFormType<T>);
 };
+
+export const parseJson = <T,>(data: string) => {
+    return JSON.parse(data) as T;
+};
+
+// данная фабрика помогает сохарнить конкретный generic-тип элемента, а не объединять их все в один union-тип в массиве
+export const defineComponent = <T extends SettingsFieldsStatic,>(cfg: ComponentConfig<T>) => {
+    return cfg
+} 

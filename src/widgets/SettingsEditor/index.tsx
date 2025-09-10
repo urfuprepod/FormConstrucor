@@ -2,7 +2,7 @@ import { commonProps } from "@/entities/FormConstructor/constants";
 import { getSettingsValues } from "@/shared/methods";
 import type {
     Arch,
-    ComponentConfigArray,
+    ComponentConfigWithStateArray,
     SettingsField,
     SettingsFieldsStatic,
 } from "@/shared/types/constructor";
@@ -11,7 +11,7 @@ import { useForm, type FormInstance } from "antd/es/form/Form";
 import { useMemo, type FC } from "react";
 
 type Props = {
-    activeItem: ComponentConfigArray[number];
+    activeItem: ComponentConfigWithStateArray[number];
     updateField: <T extends SettingsFieldsStatic>(
         positionNumber: number,
         data: Arch<T>
@@ -109,11 +109,11 @@ const Field: FC<
             return (
                 <Input
                     type="number"
-                    value={value}
+                    value={String(value)}
                     name={propertyName}
                     id={propertyName}
                     placeholder={placeholder}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) => onChange(+e.target.value)}
                 />
             );
         default:

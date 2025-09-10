@@ -1,0 +1,20 @@
+{
+  "fields": [
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 1,
+      "data": {
+        "label": "Form Label",
+        "borderWidth": 10
+      }
+    }
+  ]
+}

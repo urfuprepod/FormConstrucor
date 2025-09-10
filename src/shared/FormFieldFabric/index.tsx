@@ -1,11 +1,9 @@
 import { Form } from "antd";
 import type {
-    SettingsField,
     ComponentConfig,
     Arch,
     SettingsFieldsStatic,
 } from "../types/constructor";
-import { commonPropsToObjectForm } from "@/entities/FormConstructor/constants";
 import React from "react";
 
 type Props<T extends SettingsFieldsStatic> = {
@@ -18,8 +16,8 @@ const FormFieldFabric = <T extends SettingsFieldsStatic>(props: Props<T>) => {
 
     return (
         <Form.Item
-            name={commonPropsToObjectForm.name}
-            label={commonPropsToObjectForm.label}
+            name={fieldValues.name}
+            label={fieldValues.label}
             labelCol={{
                 span: 24,
                 style: {
@@ -28,7 +26,7 @@ const FormFieldFabric = <T extends SettingsFieldsStatic>(props: Props<T>) => {
             }}
             rules={[
                 {
-                    required: !!commonPropsToObjectForm.required,
+                    required: !!fieldValues.required,
                     message: "Поле обязательно",
                 },
             ]}

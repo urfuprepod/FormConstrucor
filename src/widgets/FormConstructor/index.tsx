@@ -1,28 +1,34 @@
 import { Button, Form } from "antd";
-import { useMemo, type FC } from "react";
+import { type FC } from "react";
 import { downloadJson } from "@/shared/methods";
 import { AddButton, DeleteButton, FieldWithButton } from "@/shared/components";
 import { ThumbsUp, Trash2 } from "lucide-react";
 import styles from "./styles.module.css";
-import type { ComponentConfigArray } from "@/shared/types/constructor";
+import type { ComponentConfigWithStateArray } from "@/shared/types/constructor";
 
 type Props = {
-    formComponentsState: ComponentConfigArray;
+    formComponentsState: ComponentConfigWithStateArray;
     onRemoveField: (positionNumber: number) => void;
     onPickFieldActive: (positionNumber: number) => void;
+    isDisabled?: boolean;
 };
 
 const FormConstructor: FC<Props> = (props) => {
-    const { formComponentsState, onPickFieldActive, onRemoveField } = props;
+    const {
+        formComponentsState,
+        isDisabled,
+        onPickFieldActive,
+        onRemoveField,
+    } = props;
 
     const [form] = Form.useForm();
-
 
     return (
         <Form
             className={styles.form}
             layout="vertical"
             form={form}
+            disabled={!!isDisabled}
             wrapperCol={{ span: 8 }}
         >
             {formComponentsState.map((config) => (

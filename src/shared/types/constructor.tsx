@@ -1,13 +1,6 @@
 import type { commonProps } from "@/entities/FormConstructor/constants";
 import type { FC } from "react";
 
-export interface IFormSettings {
-    borderWidth?: number;
-    direction?: "horizontal" | "vertical";
-    gap?: number;
-    submitText?: string;
-}
-
 export type FieldType = "checkbox" | "input" | "number" | "select";
 
 export type GetFieldValueType<T extends FieldType> = T extends "checkbox"
@@ -60,18 +53,26 @@ export type Arch<T extends SettingsFieldsStatic> = {
     >;
 };
 
-type ConfigComponent<T extends SettingsFieldsStatic> = React.ComponentType<
-    Arch<T>
->;
-
 export type ComponentConfig<T extends SettingsFieldsStatic> = {
-    Component: ConfigComponent<T>;
+    Component: React.FC<Arch<T>>;
     settings: T;
+    name: string;
 };
+
+export type ComponentConfigArray = Array<ComponentConfig<SettingsFieldsStatic>>;
 
 export type ComponentConfigWithState<T extends SettingsFieldsStatic> =
     ComponentConfig<T> & { position: number; data: Arch<T> };
 
-export type ComponentConfigArray = Array<
+export type ComponentConfigWithStateArray = Array<
     ComponentConfigWithState<SettingsFieldsStatic>
+>;
+
+export type ComponentConfigWithStateDTO<T extends SettingsFieldsStatic> = Omit<
+    ComponentConfigWithState<T>,
+    "Component"
+>;
+
+export type ComponentConfigWithStateArrayDTO = Array<
+    ComponentConfigWithStateDTO<SettingsFieldsStatic>
 >;

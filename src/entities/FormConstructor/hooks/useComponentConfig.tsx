@@ -1,16 +1,42 @@
-import { getSettingsValues } from "@/shared/methods";
+import { getSettingsValues, parseJson } from "@/shared/methods";
 import type {
     Arch,
     ComponentConfig,
-    ComponentConfigArray,
+    ComponentConfigWithStateArray,
     ComponentConfigWithState,
     SettingsFieldsStatic,
+    ComponentConfigWithStateArrayDTO,
 } from "@/shared/types/constructor";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { commonPropsToObjectForm } from "../constants";
+import { fieldsList } from "../config";
 
-export function useComponentConfig(activePositionNumber: number | null) {
-    const [fields, setFields] = useState<ComponentConfigArray>([]);
+export function useComponentConfig(
+    activePositionNumber: number | null,
+    initialFunction?: () => Promise<string>
+) {
+    const [fields, setFields] = useState<ComponentConfigWithStateArray>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (initialFunction) {
+            setIsLoading(true);
+            initialFunction()
+                .then(parseJson<ComponentConfigWithStateArrayDTO>)
+                .then((data) =>
+                    setFields(
+                        data.map((el) => ({
+                            ...el,
+                            Component: fieldsList.find(
+                                (item) => item.name === el.name
+                            )!
+                                .Component as ComponentConfigWithState<SettingsFieldsStatic>["Component"],
+                        }))
+                    )
+                )
+                .finally(() => setIsLoading(false));
+        }
+    }, [initialFunction]);
 
     const pushNewField = <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>
@@ -18,9 +44,8 @@ export function useComponentConfig(activePositionNumber: number | null) {
         setFields((prev) => [
             ...prev,
             {
+                ...config,
                 position: prev.length + 1,
-                Component: config.Component,
-                settings: config.settings,
                 data: {
                     ...getSettingsValues([...config.settings]),
                     ...commonPropsToObjectForm,
@@ -35,9 +60,8 @@ export function useComponentConfig(activePositionNumber: number | null) {
         setFields((prev) => {
             const actual = [
                 {
+                    ...config,
                     position: 1,
-                    Component: config.Component,
-                    settings: config.settings,
                     data: {
                         ...getSettingsValues([...config.settings]),
                         ...commonPropsToObjectForm,
@@ -67,7 +91,7 @@ export function useComponentConfig(activePositionNumber: number | null) {
     const removeField = (positionNumber: number) => {
         setFields((prev) => {
             const actualFields = prev.reduce(
-                (acc: ComponentConfigArray, cur) => {
+                (acc: ComponentConfigWithStateArray, cur) => {
                     if (cur.position === positionNumber) return acc;
                     if (cur.position < positionNumber) return acc.concat(cur);
                     if (cur.position > positionNumber)
@@ -100,5 +124,6 @@ export function useComponentConfig(activePositionNumber: number | null) {
         activeField,
         removeField,
         unshiftNewField,
+        isLoadingFields: isLoading,
     };
 }

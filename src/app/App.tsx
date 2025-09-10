@@ -1,11 +1,12 @@
 import "@ant-design/v5-patch-for-react-19";
 import { useComponentConfig } from "../entities/FormConstructor/hooks";
-import { Col, ConfigProvider, Row } from "antd";
+import { Col, ConfigProvider, Flex, Row, Space, Spin } from "antd";
 import ComponentPalette from "@/widgets/Palette";
 import FormConstructor from "@/widgets/FormConstructor";
 import "./main.css";
 import SettingsEditor from "@/widgets/SettingsEditor";
 import { useState } from "react";
+import { getFormConfig } from "@/shared/api/fakeApi";
 
 function App() {
     const [activePositionNumber, setActivePositionNumber] = useState<
@@ -19,7 +20,8 @@ function App() {
         updateField,
         activeField,
         removeField,
-    } = useComponentConfig(activePositionNumber);
+        isLoadingFields,
+    } = useComponentConfig(activePositionNumber, getFormConfig);
 
     return (
         <ConfigProvider
@@ -31,6 +33,7 @@ function App() {
                 },
             }}
         >
+            {JSON.stringify(activeField)}
             <Row gutter={16}>
                 <Col span={6}>
                     <ComponentPalette
@@ -39,8 +42,10 @@ function App() {
                     />
                 </Col>
                 <Col span={12}>
+                    {isLoadingFields && <Spin size="large" />}
                     <FormConstructor
                         formComponentsState={fields}
+                        isDisabled={isLoadingFields}
                         onRemoveField={removeField}
                         onPickFieldActive={setActivePositionNumber}
                     />

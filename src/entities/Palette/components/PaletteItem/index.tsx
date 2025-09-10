@@ -1,7 +1,10 @@
 import { commonPropsToObjectForm } from "@/entities/FormConstructor/constants";
 import { AddButton, FieldWithButton } from "@/shared/components";
 import { getSettingsValues } from "@/shared/methods";
-import type { ComponentConfig, SettingsFieldsStatic } from "@/shared/types/constructor";
+import type {
+    ComponentConfig,
+    SettingsFieldsStatic,
+} from "@/shared/types/constructor";
 import { MoveUp, Plus } from "lucide-react";
 
 type Props<T extends SettingsFieldsStatic> = {
@@ -10,7 +13,7 @@ type Props<T extends SettingsFieldsStatic> = {
     onUnshiftField: (field: ComponentConfig<T>) => void;
 };
 
-const PaletteItem = <T extends SettingsFieldsStatic>(props: Props<T>) => {
+const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
     const { config, onPushField, onUnshiftField } = props;
 
     return (
