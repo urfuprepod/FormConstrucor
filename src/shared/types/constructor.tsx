@@ -1,5 +1,5 @@
 import type { commonProps } from "@/entities/FormConstructor/constants";
-import type { FC } from "react";
+
 
 export type FieldType = "checkbox" | "input" | "number" | "select";
 

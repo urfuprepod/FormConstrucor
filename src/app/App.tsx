@@ -33,7 +33,6 @@ function App() {
                 },
             }}
         >
-            {JSON.stringify(activeField)}
             <Row gutter={16}>
                 <Col span={6}>
                     <ComponentPalette

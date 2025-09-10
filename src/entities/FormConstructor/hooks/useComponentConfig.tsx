@@ -1,4 +1,8 @@
-import { getSettingsValues, parseJson } from "@/shared/methods";
+import {
+    generateLabelName,
+    getSettingsValues,
+    parseJson,
+} from "@/shared/methods";
 import type {
     Arch,
     ComponentConfig,
@@ -7,7 +11,7 @@ import type {
     SettingsFieldsStatic,
     ComponentConfigWithStateArrayDTO,
 } from "@/shared/types/constructor";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { commonPropsToObjectForm } from "../constants";
 import { fieldsList } from "../config";
 
@@ -38,44 +42,50 @@ export function useComponentConfig(
         }
     }, [initialFunction]);
 
-    const pushNewField = <T extends SettingsFieldsStatic>(
-        config: ComponentConfig<T>
-    ) => {
-        setFields((prev) => [
-            ...prev,
-            {
-                ...config,
-                position: prev.length + 1,
-                data: {
-                    ...getSettingsValues([...config.settings]),
-                    ...commonPropsToObjectForm,
-                },
-            } as ComponentConfigWithState<SettingsFieldsStatic>,
-        ]);
-    };
+    const pushNewField = useCallback(
+        <T extends SettingsFieldsStatic>(config: ComponentConfig<T>) => {
+            const data = {
+                ...getSettingsValues([...config.settings]),
+                ...commonPropsToObjectForm,
+            };
 
-    const unshiftNewField = <T extends SettingsFieldsStatic>(
-        config: ComponentConfig<T>
-    ) => {
-        setFields((prev) => {
-            const actual = [
+            data.label = generateLabelName();
+
+            setFields((prev) => [
+                ...prev,
                 {
                     ...config,
-                    position: 1,
-                    data: {
-                        ...getSettingsValues([...config.settings]),
-                        ...commonPropsToObjectForm,
-                    },
+                    position: prev.length + 1,
+                    data,
                 } as ComponentConfigWithState<SettingsFieldsStatic>,
-                ...prev.map((item) => ({
-                    ...item,
-                    position: item.position + 1,
-                })),
-            ];
+            ]);
+        },
+        [setFields]
+    );
 
-            return actual;
-        });
-    };
+    const unshiftNewField = useCallback(
+        <T extends SettingsFieldsStatic>(config: ComponentConfig<T>) => {
+            setFields((prev) => {
+                const actual = [
+                    {
+                        ...config,
+                        position: 1,
+                        data: {
+                            ...getSettingsValues([...config.settings]),
+                            ...commonPropsToObjectForm,
+                        },
+                    } as ComponentConfigWithState<SettingsFieldsStatic>,
+                    ...prev.map((item) => ({
+                        ...item,
+                        position: item.position + 1,
+                    })),
+                ];
+
+                return actual;
+            });
+        },
+        [setFields]
+    );
 
     const updateField = <T extends SettingsFieldsStatic>(
         positionNumber: number,

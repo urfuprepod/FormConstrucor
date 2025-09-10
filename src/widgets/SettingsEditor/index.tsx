@@ -3,12 +3,14 @@ import { getSettingsValues } from "@/shared/methods";
 import type {
     Arch,
     ComponentConfigWithStateArray,
+    FieldType,
+    GetFieldValueType,
     SettingsField,
     SettingsFieldsStatic,
 } from "@/shared/types/constructor";
 import { Checkbox, Form, Input, Select } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
-import { useMemo, type FC } from "react";
+import { useEffect, type FC } from "react";
 
 type Props = {
     activeItem: ComponentConfigWithStateArray[number];
@@ -27,40 +29,38 @@ const SettingsEditor: FC<Props> = (props) => {
         updateField(activeItem.position, allValues);
     };
 
-    const finalSettings = useMemo(() => {
-        const joined = [...commonProps, ...activeItem.settings];
+    const joined = [...commonProps, ...activeItem.settings];
 
-        return {
-            values: joined,
-            initialValues: getSettingsValues(joined),
-        };
-    }, [activeItem.settings]);
+    // useEffect(() => {
+    //     console.log('чи да');
+    //     form.setFieldsValue(activeItem.data);
+    // }, [activeItem])
 
     return (
         <Form<Arch<SettingsFieldsStatic>>
             onValuesChange={onValuesChange}
             form={form}
-            initialValues={finalSettings.initialValues}
+            initialValues={{ ...getSettingsValues(joined), ...activeItem.data }}
         >
-            {finalSettings.values.map((field) => (
+            {joined.map((field) => (
                 <Form.Item
                     name={field.propertyName}
                     label={field.labelText}
                     key={field.propertyName}
-                    getValueProps={(value) => {
-                        if (field.type === "checkbox")
-                            return { checked: value };
-                        return { value };
-                    }}
+                    getValueProps={(value) =>
+                        field.type === "checkbox"
+                            ? { checked: value }
+                            : { value }
+                    }
                     valuePropName={
                         field.type === "checkbox" ? "checked" : "value"
                     }
                 >
                     <Field
-                        {...field}
-                        form={form}
-                        onChange={(value: any) =>
-                            form.setFieldsValue({ [field.propertyName]: value })
+                        settingsField={field}
+                        value={activeItem.data[field.propertyName]}
+                        onChange={(val) =>
+                            updateField(activeItem.position, val)
                         }
                     />
                 </Form.Item>
@@ -69,51 +69,77 @@ const SettingsEditor: FC<Props> = (props) => {
     );
 };
 
-const Field: FC<
-    SettingsField & { form: FormInstance; onChange: (val: any) => void }
-> = (props) => {
-    const { type, propertyName, placeholder, form, onChange } = props;
+type FormFieldProps<K extends FieldType> = {
+    settingsField: SettingsField<K>;
+    value: GetFieldValueType<K>;
+    onChange: (val: GetFieldValueType<K>) => void;
+};
 
-    const value = form.getFieldValue(propertyName);
+type ChangeHandler<T extends FieldType> = {
+    [P in T]: (e: any) => void;
+};
+
+const Field = <T extends FieldType>(props: FormFieldProps<T>) => {
+    const {
+        settingsField: { propertyName, type, placeholder },
+        value,
+        onChange,
+    } = props;
+
+    // Создаем обработчик событий с учетом типа поля
+    const handleChange: ChangeHandler<FieldType> = {
+        input: (e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange(e.target.value as GetFieldValueType<T>);
+        },
+        select: (val: string) => {
+            onChange(val as GetFieldValueType<T>);
+        },
+        checkbox: (e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange(e.target.checked as GetFieldValueType<T>);
+        },
+        number: (e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange(+e.target.value as GetFieldValueType<T>);
+        },
+    };
 
     switch (type) {
         case "input":
             return (
                 <Input
                     id={propertyName}
-                    value={value}
+                    value={value as string}
                     name={propertyName}
                     placeholder={placeholder}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={handleChange.input}
                 />
             );
         case "select":
             return (
                 <Select<string>
                     placeholder={placeholder}
-                    value={value}
+                    value={value as string}
                     id={propertyName}
-                    onChange={onChange}
+                    onChange={handleChange.select}
                 />
             );
         case "checkbox":
             return (
                 <Checkbox
                     id={propertyName}
-                    checked={value}
+                    checked={value as boolean}
                     name={propertyName}
-                    onChange={(e) => onChange(e.target.checked)}
+                    onChange={handleChange.checkbox}
                 />
             );
         case "number":
             return (
                 <Input
                     type="number"
-                    value={String(value)}
+                    value={value as number}
                     name={propertyName}
                     id={propertyName}
                     placeholder={placeholder}
-                    onChange={(e) => onChange(+e.target.value)}
+                    onChange={handleChange.number}
                 />
             );
         default:

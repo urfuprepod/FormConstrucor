@@ -52,6 +52,31 @@ export const parseJson = <T,>(data: string) => {
 };
 
 // данная фабрика помогает сохарнить конкретный generic-тип элемента, а не объединять их все в один union-тип в массиве
-export const defineComponent = <T extends SettingsFieldsStatic,>(cfg: ComponentConfig<T>) => {
-    return cfg
-} 
+export const defineComponent = <T extends SettingsFieldsStatic>(
+    cfg: ComponentConfig<T>
+) => {
+    return cfg;
+};
+
+const messages = [
+    "ложка",
+    "трава",
+    "меч",
+    "соль",
+    "ключ",
+    "архангел",
+    "монополия",
+    "бункер",
+    "торжество",
+];
+
+export const generateLabelName = (): string => {
+    const first = Math.floor(Math.random() * messages.length);
+
+    let second = Math.floor(Math.random() * messages.length);
+    while (second === first) {
+        second = Math.floor(Math.random() * messages.length);
+    }
+
+    return [messages[first], messages[second]].join(" ");
+};

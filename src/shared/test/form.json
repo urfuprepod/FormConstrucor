@@ -15,6 +15,175 @@
         "label": "Form Label",
         "borderWidth": 10
       }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 2,
+      "data": {
+        "borderWidth": 1,
+        "label": "Form Label"
+      }
+    },
+    {
+      "settings": [
+        {
+          "type": "input",
+          "defaultValue": "Не найдено",
+          "propertyName": "notFoundContent",
+          "labelText": "Текст при отсутствии результатов"
+        },
+        {
+          "type": "checkbox",
+          "propertyName": "loading",
+          "labelText": "Статус загрузки"
+        }
+      ],
+      "name": "Input",
+      "position": 3,
+      "data": {
+        "notFoundContent": "Не найдено",
+        "label": "Form Label"
+      }
+    },
+    {
+      "settings": [
+        {
+          "type": "input",
+          "defaultValue": "Не найдено",
+          "propertyName": "notFoundContent",
+          "labelText": "Текст при отсутствии результатов"
+        },
+        {
+          "type": "checkbox",
+          "propertyName": "loading",
+          "labelText": "Статус загрузки"
+        }
+      ],
+      "name": "Input",
+      "position": 4,
+      "data": {
+        "notFoundContent": "Не найдено",
+        "label": "Form Label"
+      }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 5,
+      "data": {
+        "borderWidth": 1,
+        "label": "Form Label"
+      }
+    },
+    {
+      "settings": [
+        {
+          "type": "input",
+          "defaultValue": "Не найдено",
+          "propertyName": "notFoundContent",
+          "labelText": "Текст при отсутствии результатов"
+        },
+        {
+          "type": "checkbox",
+          "propertyName": "loading",
+          "labelText": "Статус загрузки"
+        }
+      ],
+      "name": "Input",
+      "position": 6,
+      "data": {
+        "notFoundContent": "Не найдено",
+        "label": "Form Label"
+      }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 7,
+      "data": {
+        "borderWidth": 1,
+        "label": "Form Label"
+      }
+    },
+    {
+      "settings": [
+        {
+          "type": "input",
+          "defaultValue": "Не найдено",
+          "propertyName": "notFoundContent",
+          "labelText": "Текст при отсутствии результатов"
+        },
+        {
+          "type": "checkbox",
+          "propertyName": "loading",
+          "labelText": "Статус загрузки"
+        }
+      ],
+      "name": "Input",
+      "position": 8,
+      "data": {
+        "notFoundContent": "Не найдено",
+        "label": "Form Label"
+      }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 9,
+      "data": {
+        "borderWidth": 1,
+        "label": "Form Label"
+      }
+    },
+    {
+      "settings": [
+        {
+          "type": "input",
+          "defaultValue": "Не найдено",
+          "propertyName": "notFoundContent",
+          "labelText": "Текст при отсутствии результатов"
+        },
+        {
+          "type": "checkbox",
+          "propertyName": "loading",
+          "labelText": "Статус загрузки"
+        }
+      ],
+      "name": "Input",
+      "position": 10,
+      "data": {
+        "notFoundContent": "Не найдено",
+        "label": "Form Label"
+      }
     }
   ]
 }
