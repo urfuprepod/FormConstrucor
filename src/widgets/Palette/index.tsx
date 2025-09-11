@@ -8,17 +8,16 @@ import type {
 } from "@/shared/types/constructor";
 import { fieldsList } from "@/entities/FormConstructor/config";
 
+type PropsFunction = <T extends SettingsFieldsStatic>(
+    component: ComponentConfig<T>
+) => void;
+
 type Props = {
-    onPushField: <T extends SettingsFieldsStatic>(
-        component: ComponentConfig<T>
-    ) => void;
-    onUnshiftField: <T extends SettingsFieldsStatic>(
-        component: ComponentConfig<T>
-    ) => void;
+    onPushField: PropsFunction;
+    onUnshiftField: PropsFunction;
 };
 
 const ComponentPalette: FC<Props> = React.memo((props) => {
-
     return (
         <Flex vertical gap={12} className={styles.palette}>
             {fieldsList.map((cfg, i) => (
@@ -28,16 +27,6 @@ const ComponentPalette: FC<Props> = React.memo((props) => {
                     {...props}
                 />
             ))}
-
-            {/* <PaletteItem
-                config={{ settings: selectSettings, Component: Select }}
-                {...props}
-            />
-
-            <PaletteItem
-                config={{ Component: Select, settings: selectSettings }}
-                {...props}
-            /> */}
         </Flex>
     );
 });

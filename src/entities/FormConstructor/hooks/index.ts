@@ -1,3 +1,4 @@
 import { useComponentConfig } from "./useComponentConfig";
+import { useActiveField } from "./useActiveField";
 
-export { useComponentConfig };
+export { useComponentConfig, useActiveField };

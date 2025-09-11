@@ -1,14 +1,21 @@
 import { commonProps } from "@/entities/FormConstructor/constants";
+import { editingFieldsDictionary } from "@/entities/SettingsEditor/constants";
 import { getSettingsValues } from "@/shared/methods";
-import type {
-    Arch,
-    ComponentConfigWithStateArray,
-    SettingsField,
-    SettingsFieldsStatic,
+import {
+    isInputField,
+    isNumberField,
+    isSelectField,
+    type Arch,
+    type ComponentConfigWithStateArray,
+    type FieldProps,
+    type FieldType,
+    type SettingsField,
+    type SettingsFieldsStatic,
 } from "@/shared/types/constructor";
-import { Checkbox, Form, Input, Select } from "antd";
+import { Checkbox, Form, Input, InputNumber, Select } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
-import { useEffect, useMemo, type FC } from "react";
+import React from "react";
+import { useEffect, type FC } from "react";
 
 type Props = {
     activeItem: ComponentConfigWithStateArray[number];
@@ -40,7 +47,10 @@ const SettingsEditor: FC<Props> = (props) => {
         <Form<Arch<SettingsFieldsStatic>>
             onValuesChange={onValuesChange}
             form={form}
-            initialValues={{ ...getSettingsValues(joined), ...activeItem.data }}
+            initialValues={{
+                ...getSettingsValues(joined),
+                ...activeItem.data,
+            }}
         >
             {joined.map((field) => (
                 <Form.Item
@@ -57,10 +67,12 @@ const SettingsEditor: FC<Props> = (props) => {
                     }
                 >
                     <Field
-                        {...field}
+                        field={field}
                         form={form}
                         onChange={(value: any) =>
-                            form.setFieldsValue({ [field.propertyName]: value })
+                            form.setFieldsValue({
+                                [field.propertyName]: value,
+                            })
                         }
                     />
                 </Form.Item>
@@ -69,57 +81,28 @@ const SettingsEditor: FC<Props> = (props) => {
     );
 };
 
-const Field: FC<
-    SettingsField & { form: FormInstance; onChange: (val: any) => void }
-> = (props) => {
-    const { type, propertyName, placeholder, form, onChange } = props;
+const Field: FC<{
+    field: FieldProps;
+    form: FormInstance;
+    onChange: (val: any) => void;
+}> = (props) => {
+    const { field, form, onChange } = props;
+
+    const { propertyName, placeholder } = field;
 
     const value = form.getFieldValue(propertyName);
 
-    switch (type) {
-        case "input":
-            return (
-                <Input
-                    id={propertyName}
-                    value={value}
-                    name={propertyName}
-                    placeholder={placeholder}
-                    onChange={(e) => onChange(e.target.value)}
-                />
-            );
-        case "select":
-            return (
-                <Select<string>
-                    placeholder={placeholder}
-                    value={value}
-                    id={propertyName}
-                    onChange={onChange}
-                />
-            );
-        case "checkbox":
-            return (
-                <Checkbox
-                    id={propertyName}
-                    checked={value}
-                    name={propertyName}
-                    onChange={(e) => onChange(e.target.checked)}
-                />
-            );
-        case "number":
-            return (
-                <Input
-                    type="number"
-                    value={String(value)}
-                    name={propertyName}
-                    id={propertyName}
-                    placeholder={placeholder}
-                    onChange={(e) => onChange(+e.target.value)}
-                />
-            );
-        default:
-            const _exhaustiveCheck: never = type;
-            return _exhaustiveCheck;
-    }
+    const [guardFn, Component] = editingFieldsDictionary[field.type];
+    if (guardFn(field))
+        return React.createElement(Component, {
+            ...field.options,
+            placeholder,
+            propertyName,
+            value,
+            onChange,
+        });
+
+    return null
 };
 
 export default SettingsEditor;

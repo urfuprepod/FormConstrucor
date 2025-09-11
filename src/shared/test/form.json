@@ -12,8 +12,8 @@
       ],
       "position": 1,
       "data": {
-        "label": "Form Label",
-        "borderWidth": 10
+        "borderWidth": 1,
+        "label": "ложка ключ"
       }
     },
     {
@@ -29,49 +29,39 @@
       "position": 2,
       "data": {
         "borderWidth": 1,
-        "label": "Form Label"
+        "label": "бункер ключ"
       }
     },
     {
+      "name": "Input",
       "settings": [
         {
-          "type": "input",
-          "defaultValue": "Не найдено",
-          "propertyName": "notFoundContent",
-          "labelText": "Текст при отсутствии результатов"
-        },
-        {
-          "type": "checkbox",
-          "propertyName": "loading",
-          "labelText": "Статус загрузки"
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
         }
       ],
-      "name": "Input",
       "position": 3,
       "data": {
-        "notFoundContent": "Не найдено",
-        "label": "Form Label"
+        "borderWidth": 1,
+        "label": "соль архангел"
       }
     },
     {
+      "name": "Input",
       "settings": [
         {
-          "type": "input",
-          "defaultValue": "Не найдено",
-          "propertyName": "notFoundContent",
-          "labelText": "Текст при отсутствии результатов"
-        },
-        {
-          "type": "checkbox",
-          "propertyName": "loading",
-          "labelText": "Статус загрузки"
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
         }
       ],
-      "name": "Input",
       "position": 4,
       "data": {
-        "notFoundContent": "Не найдено",
-        "label": "Form Label"
+        "borderWidth": 1,
+        "label": "бункер ключ"
       }
     },
     {
@@ -87,28 +77,23 @@
       "position": 5,
       "data": {
         "borderWidth": 1,
-        "label": "Form Label"
+        "label": "торжество архангел"
       }
     },
     {
+      "name": "Input",
       "settings": [
         {
-          "type": "input",
-          "defaultValue": "Не найдено",
-          "propertyName": "notFoundContent",
-          "labelText": "Текст при отсутствии результатов"
-        },
-        {
-          "type": "checkbox",
-          "propertyName": "loading",
-          "labelText": "Статус загрузки"
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
         }
       ],
-      "name": "Input",
       "position": 6,
       "data": {
-        "notFoundContent": "Не найдено",
-        "label": "Form Label"
+        "borderWidth": 1,
+        "label": "монополия бункер"
       }
     },
     {
@@ -124,28 +109,23 @@
       "position": 7,
       "data": {
         "borderWidth": 1,
-        "label": "Form Label"
+        "label": "ложка меч"
       }
     },
     {
+      "name": "Input",
       "settings": [
         {
-          "type": "input",
-          "defaultValue": "Не найдено",
-          "propertyName": "notFoundContent",
-          "labelText": "Текст при отсутствии результатов"
-        },
-        {
-          "type": "checkbox",
-          "propertyName": "loading",
-          "labelText": "Статус загрузки"
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
         }
       ],
-      "name": "Input",
       "position": 8,
       "data": {
-        "notFoundContent": "Не найдено",
-        "label": "Form Label"
+        "borderWidth": 1,
+        "label": "торжество трава"
       }
     },
     {
@@ -161,28 +141,71 @@
       "position": 9,
       "data": {
         "borderWidth": 1,
-        "label": "Form Label"
+        "label": "трава торжество"
       }
     },
     {
+      "name": "Input",
       "settings": [
         {
-          "type": "input",
-          "defaultValue": "Не найдено",
-          "propertyName": "notFoundContent",
-          "labelText": "Текст при отсутствии результатов"
-        },
-        {
-          "type": "checkbox",
-          "propertyName": "loading",
-          "labelText": "Статус загрузки"
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
         }
       ],
-      "name": "Input",
       "position": 10,
       "data": {
-        "notFoundContent": "Не найдено",
-        "label": "Form Label"
+        "borderWidth": 1,
+        "label": "соль меч"
+      }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 11,
+      "data": {
+        "borderWidth": 1,
+        "label": "меч бункер"
+      }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 12,
+      "data": {
+        "borderWidth": 1,
+        "label": "ключ ложка"
+      }
+    },
+    {
+      "name": "Input",
+      "settings": [
+        {
+          "type": "number",
+          "defaultValue": 1,
+          "propertyName": "borderWidth",
+          "labelText": "Толщина рамки"
+        }
+      ],
+      "position": 13,
+      "data": {
+        "borderWidth": 8,
+        "label": "меч трава"
       }
     }
   ]

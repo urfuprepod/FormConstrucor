@@ -1,17 +1,20 @@
 import "@ant-design/v5-patch-for-react-19";
-import { useComponentConfig } from "../entities/FormConstructor/hooks";
+import {
+    useActiveField,
+    useComponentConfig,
+} from "../entities/FormConstructor/hooks";
 import { Col, ConfigProvider, Flex, Row, Space, Spin } from "antd";
 import ComponentPalette from "@/widgets/Palette";
 import FormConstructor from "@/widgets/FormConstructor";
 import "./main.css";
 import SettingsEditor from "@/widgets/SettingsEditor";
-import { useState } from "react";
+import { useRef } from "react";
 import { getFormConfig } from "@/shared/api/fakeApi";
 
 function App() {
-    const [activePositionNumber, setActivePositionNumber] = useState<
-        number | null
-    >(null);
+    const ref = useRef<HTMLDivElement>(null);
+
+    const [activePositionNumber, setActivePositionNumber] = useActiveField(ref);
 
     const {
         fields,
@@ -50,7 +53,7 @@ function App() {
                     />
                 </Col>
 
-                <Col span={6}>
+                <Col span={6} ref={ref}>
                     {activeField && (
                         <SettingsEditor
                             updateField={updateField}

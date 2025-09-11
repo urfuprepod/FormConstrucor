@@ -113,7 +113,7 @@ export function useComponentConfig(
                 },
                 []
             );
-            return { ...prev, fields: actualFields };
+            return actualFields;
         });
     };
 

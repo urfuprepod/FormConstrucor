@@ -49,9 +49,10 @@ const FormConstructor: FC<Props> = (props) => {
                                 }
                             />
                             <AddButton
-                                onClick={() =>
-                                    onPickFieldActive(config.position)
-                                }
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onPickFieldActive(config.position);
+                                }}
                                 icon={
                                     <ThumbsUp
                                         size={16}

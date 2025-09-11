@@ -6,6 +6,9 @@ export const commonProps = [
         propertyName: "name",
         labelText: "Имя поля",
         placeholder: "Введите имя...",
+        options: {
+            maxLength: 12,
+        },
     },
     {
         type: "checkbox",
