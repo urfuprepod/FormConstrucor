@@ -15,7 +15,7 @@ export type EditingFieldProps<T extends FieldType> =
     FindAdvanced<T>["options"] &
         Pick<SettingsField, "placeholder" | "propertyName"> & {
             onChange: (val: any) => void;
-            value: any;
+            value: FindAdvanced<T>["defaultValue"];
         };
 
 export type EditingSettingsConfig = {

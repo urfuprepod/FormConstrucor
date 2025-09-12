@@ -8,13 +8,14 @@ import { useMemo, type FC } from "react";
 type Props = EditingFieldProps<"options">;
 
 const SelectOptionCreator: FC<Props> = (props) => {
-    const { value, onChange, placeholder, propertyName, maxLength } = props;
+    const { value, onChange, maxLength } = props;
 
     const [labelData, updateLabelData, setLabelData] = useInput("");
     const [valueData, updateValueData, setValueData] = useInput("");
 
     const isValidToCreate = useMemo<boolean>(() => {
-        const isMaxLengthValid = !maxLength || value?.length < maxLength;
+        const isMaxLengthValid =
+            !maxLength || !value || value.length < maxLength;
         const isUnique = !value?.find((el: IOption) => el.value === valueData);
 
         return !!(labelData && isMaxLengthValid && valueData && isUnique);
@@ -37,19 +38,20 @@ const SelectOptionCreator: FC<Props> = (props) => {
             <Flex vertical gap={6} justify="flex-end">
                 <FlexInLine gap={10}>
                     <Input
-                        placeholder={'Имя поля'}
+                        placeholder={"Имя поля"}
                         value={labelData}
                         onChange={updateLabelData}
                     />
                     <Input
-                        placeholder={'Значение поля'}
+                        placeholder={"Значение поля"}
                         value={valueData}
                         onChange={updateValueData}
                     />
                 </FlexInLine>
 
                 <Flex justify="space-between" gap={6} align="center">
-                    {maxLength &&
+                    {!!maxLength &&
+                        !!value &&
                         value.length >= maxLength &&
                         "Достигнут лимит"}
                     <Button
