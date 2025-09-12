@@ -56,6 +56,13 @@ const SettingsEditor: FC<Props> = (props) => {
                 <Form.Item
                     name={field.propertyName}
                     label={field.labelText}
+                    labelCol={{
+                        // span: 24,
+                        style: {
+                            fontWeight: 500,
+                        },
+                    }}
+                    // wrapperCol={{ span: 24, style: { width: "100%" } }}
                     key={field.propertyName}
                     getValueProps={(value) => {
                         if (field.type === "checkbox")
@@ -102,7 +109,7 @@ const Field: FC<{
             onChange,
         });
 
-    return null
+    return null;
 };
 
 export default SettingsEditor;

@@ -10,6 +10,12 @@ export const selectSettings = [
         type: "checkbox",
         propertyName: 'loading',
         labelText: 'Статус загрузки'
+    },
+    {
+        type: 'options',
+        propertyName: 'values',
+        labelText: 'Значения для выбора'
+
     }
     
 ] as const;

@@ -1,19 +1,19 @@
 import type { commonProps } from "@/entities/FormConstructor/constants";
-import type { FC } from "react";
 import type { IOption } from "./selelct";
 import React from "react";
-import { Input } from "antd";
 
-export type FieldType = "checkbox" | "input" | "number" | "select";
+export type FieldType = "checkbox" | "input" | "number" | "select" | "options";
 
 export type GetFieldValueType<T extends FieldType> = T extends "checkbox"
     ? boolean
     : T extends "number"
     ? number
+    : T extends "options"
+    ? IOption[]
     : string;
 
 export type SettingsField<
-    K extends FieldType = "checkbox" | "input" | "number" | "select"
+    K extends FieldType = "checkbox" | "input" | "number" | "select" | "options"
 > = {
     type: K;
     propertyName: string;
@@ -60,55 +60,21 @@ type OptionProps<T extends Record<string, any>> = {
     options?: Partial<T>;
 };
 
-// type C = {
-//     [K in FieldType]: [
-//         (item: SettingsField<FieldType>) => item is FindAdvanced<K>,
-//         FC<FindAdvanced<K>["options"] & Pick<SettingsField, 'placeholder' | 'propertyName'> & { onChange: (val: any) => void }>
-//     ];
-// };
+export type OptionCreatorFieldProps = SettingsField<"options"> &
+    OptionProps<{ maxLength: number }>;
 
-// const a: C = {
-//     input: [
-//         isInputField,
-//         () => <Input
-//             id={propertyName}
-//             value={value}
-//             minLength={field.options?.minLength}
-//             maxLength={field.options?.maxLength}
-//             name={propertyName}
-//             placeholder={placeholder}
-//             onChange={(e) => onChange(e.target.value)}
-//         />,
-//     ],
-// };
-
-// const b: FieldProps[] = [];
-
-// b.map((el) =>
-//     check(el, a[el.type][0], a[el.type][1])
-//         ? React.createElement(a[el.type][1], {
-//               ...el.options,
-//               placeholder: '',
-//               propertyName: '',
-//               onChange: () => {},
-//           })
-//         : null
-// );
-
-// function check<T extends FieldType>(
-//     ac: FieldProps,
-//     b: (item: SettingsField<FieldType>) => item is FindAdvanced<T>,
-//     c: FC<FindAdvanced<K>["options"] & Pick<SettingsField, 'placeholder' | 'propertyName'> & { onChange: (val: any) => void }>
-// ) {
-//     if (b(ac)) return c;
-//     return null;
-// }
+export const isOptionCreatorField = (
+    item: SettingsField
+): item is OptionCreatorFieldProps => {
+    return item.type === "options";
+};
 
 export type FieldProps =
     | InputFieldProps
     | NumberFieldProps
     | CheckboxFieldProps
-    | SelectFieldProps;
+    | SelectFieldProps
+    | OptionCreatorFieldProps;
 
 export type ObjectSettingsFormType<T extends SettingsFieldsStatic> = {
     [K in T[number]["propertyName"]]: NonNullable<
