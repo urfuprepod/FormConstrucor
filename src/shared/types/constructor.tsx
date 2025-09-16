@@ -1,6 +1,7 @@
 import type { commonProps } from "@/entities/FormConstructor/constants";
 import type { IOption } from "./selelct";
 import React from "react";
+import type { fieldVariantsOptions } from "../constants";
 
 export type FieldType = "checkbox" | "input" | "number" | "select" | "options";
 
@@ -112,7 +113,18 @@ export type ComponentConfig<T extends SettingsFieldsStatic> = {
     Component: React.FC<Arch<T>>;
     settings: T;
     name: string;
+    config: {
+        hide?: {
+            type: FieldVariant,
+            field: string,
+            value: string | null
+        }
+    }
 };
+
+
+
+export type FieldVariant = (typeof fieldVariantsOptions)[number]["value"];
 
 export type ComponentConfigArray = Array<ComponentConfig<SettingsFieldsStatic>>;
 

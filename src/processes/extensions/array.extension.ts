@@ -14,7 +14,6 @@ if (!Array.prototype.filterMap) {
         mapFn: (value: T, index: number, array: T[]) => U,
         thisArg?: any
     ): U[] {
-        // Проверяем корректность callback
         if (typeof filterFn !== "function" || typeof mapFn !== "function") {
             throw new TypeError("Callback должен быть функцией");
         }

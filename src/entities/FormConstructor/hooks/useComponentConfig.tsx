@@ -98,6 +98,22 @@ export function useComponentConfig(
         );
     };
 
+    const updateConfig = <
+        T extends keyof ComponentConfig<SettingsFieldsStatic>["config"]
+    >(
+        positionNumber: number,
+        key: T,
+        val: ComponentConfig<SettingsFieldsStatic>["config"][T]
+    ) => {
+        setFields((prev) =>
+            prev.map((field) =>
+                field.position === positionNumber
+                    ? { ...field, config: { ...field.config, [key]: val } }
+                    : field
+            )
+        );
+    };
+
     const removeField = (positionNumber: number) => {
         setFields((prev) => {
             const actualFields = prev.reduce(
@@ -135,5 +151,6 @@ export function useComponentConfig(
         removeField,
         unshiftNewField,
         isLoadingFields: isLoading,
+        updateConfig
     };
 }

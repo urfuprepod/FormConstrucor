@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-export const useDebounce = (startValue?: string, callback?: (val: string) => void, delay: number = 500) => {
+export const useDebounce = (
+    startValue?: string,
+    callback?: (val: string) => void,
+    delay: number = 500
+) => {
     const [data, setData] = useState(startValue ?? "");
     const [debouncedValue, setDebouncedValue] = useState(data);
 
@@ -19,10 +23,16 @@ export const useDebounce = (startValue?: string, callback?: (val: string) => voi
         } else {
             timerRef.current = setTimeout(() => {
                 setDebouncedValue(data ?? "");
-                callback?.(data ?? '')
+                callback?.(data ?? "");
             }, delay);
         }
     }, [data]);
+
+    useEffect(() => {
+        if (startValue !== data) {
+            setData(startValue ?? '');
+        }
+    }, [startValue]);
 
     return {
         value: data,

@@ -10,6 +10,7 @@ import "./main.css";
 import SettingsEditor from "@/widgets/SettingsEditor";
 import { useRef } from "react";
 import { getFormConfig } from "@/shared/api/fakeApi";
+import { FormConstructorContext } from "@/entities/FormConstructor/context";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);
@@ -24,6 +25,7 @@ function App() {
         activeField,
         removeField,
         isLoadingFields,
+        updateConfig,
     } = useComponentConfig(activePositionNumber, getFormConfig);
 
     return (
@@ -36,33 +38,35 @@ function App() {
                 },
             }}
         >
-            <Row gutter={16}>
-                <Col span={6}>
-                    <ComponentPalette
-                        onPushField={pushNewField}
-                        onUnshiftField={unshiftNewField}
-                    />
-                </Col>
-                <Col span={12}>
-                    {isLoadingFields && <Spin size="large" />}
-                    <FormConstructor
-                        formComponentsState={fields}
-                        isDisabled={isLoadingFields}
-                        activePositionNumber={activePositionNumber}
-                        onRemoveField={removeField}
-                        onPickFieldActive={setActivePositionNumber}
-                    />
-                </Col>
-
-                <Col span={6} ref={ref}>
-                    {activeField && (
-                        <SettingsEditor
-                            updateField={updateField}
-                            activeItem={activeField}
+            <FormConstructorContext.Provider value={{ fields, updateConfig }}>
+                <Row gutter={16}>
+                    <Col span={6}>
+                        <ComponentPalette
+                            onPushField={pushNewField}
+                            onUnshiftField={unshiftNewField}
                         />
-                    )}
-                </Col>
-            </Row>
+                    </Col>
+                    <Col span={12}>
+                        {isLoadingFields && <Spin size="large" />}
+                        <FormConstructor
+                            formComponentsState={fields}
+                            isDisabled={isLoadingFields}
+                            activePositionNumber={activePositionNumber}
+                            onRemoveField={removeField}
+                            onPickFieldActive={setActivePositionNumber}
+                        />
+                    </Col>
+
+                    <Col span={6} ref={ref}>
+                        {activeField && (
+                            <SettingsEditor
+                                updateField={updateField}
+                                activeItem={activeField}
+                            />
+                        )}
+                    </Col>
+                </Row>
+            </FormConstructorContext.Provider>
         </ConfigProvider>
     );
 }

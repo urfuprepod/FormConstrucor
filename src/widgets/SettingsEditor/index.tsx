@@ -1,5 +1,7 @@
 import { commonProps } from "@/entities/FormConstructor/constants";
+import { useFormConstructorContext } from "@/entities/FormConstructor/context";
 import { useCalculatetriggerSettings } from "@/entities/FormConstructor/hooks";
+import { HideConstructor } from "@/entities/SettingsEditor/components";
 import { editingFieldsDictionary } from "@/entities/SettingsEditor/constants";
 import { getSettingsValues } from "@/shared/methods";
 import {
@@ -28,13 +30,18 @@ const SettingsEditor: FC<Props> = (props) => {
 
     const onValuesChange = (_: any, allValues: Arch<SettingsFieldsStatic>) => {
         updateField(activeItem.position, allValues);
-   
+
         // setLocalData(allValues);
     };
 
     const joined = [...commonProps, ...activeItem.settings];
 
     useEffect(() => {
+
+        console.log({
+            ...getSettingsValues(joined),
+            ...activeItem.data,
+        }, 'jopa')
         form.setFieldsValue({
             ...getSettingsValues(joined),
             ...activeItem.data,
@@ -45,6 +52,8 @@ const SettingsEditor: FC<Props> = (props) => {
     const [localData, setLocalData] = useState<Arch<SettingsFieldsStatic>>(
         activeItem.data
     );
+
+    const { fields, updateConfig } = useFormConstructorContext();
 
     return (
         <Form<Arch<SettingsFieldsStatic>>
@@ -66,7 +75,6 @@ const SettingsEditor: FC<Props> = (props) => {
                             textAlign: "left",
                         },
                     }}
-                    // wrapperCol={{ span: 24, style: { width: "100%" } }}
                     key={field.propertyName}
                     getValueProps={(value) => {
                         if (field.type === "checkbox")
@@ -80,19 +88,20 @@ const SettingsEditor: FC<Props> = (props) => {
                     <Field
                         field={field}
                         form={form}
-                        onChange={
-                            (value: any) =>
-                                form.setFieldsValue({
-                                    [field.propertyName]: value,
-                                })
-                            // setLocalData({
-                            //     ...localData,
-                            //     [field.propertyName]: value,
-                            // })
+                        onChange={(value: any) =>
+                            form.setFieldsValue({
+                                [field.propertyName]: value,
+                            })
                         }
                     />
                 </Form.Item>
             ))}
+
+            <HideConstructor
+                activeItem={activeItem}
+                updateConfig={updateConfig}
+                fields={fields}
+            />
         </Form>
     );
 };

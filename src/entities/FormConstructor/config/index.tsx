@@ -11,10 +11,12 @@ export const fieldsList = [
         Component: Input,
         name: InputOption.componentName,
         settings: InputOption.inputSettings,
+        config: {},
     }),
     defineComponent({
         Component: Select,
         settings: SelectOption.selectSettings,
-        name: InputOption.componentName
+        name: InputOption.componentName,
+        config: {},
     }),
 ];

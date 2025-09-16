@@ -20,11 +20,11 @@ export const useActiveField = (
         setActivePositionNumber(positionNumber);
     };
 
-    useClickOutside(ref, () => {
-        if (activePositionNumberRef.current) {
-            resetActiveField();
-        }
-    });
+    // useClickOutside(ref, () => {
+    //     if (activePositionNumberRef.current) {
+    //         resetActiveField();
+    //     }
+    // });
 
     return [activePositionNumber, updateActiveField];
 };
