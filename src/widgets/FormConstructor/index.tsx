@@ -11,6 +11,7 @@ type Props = {
     onRemoveField: (positionNumber: number) => void;
     onPickFieldActive: (positionNumber: number) => void;
     isDisabled?: boolean;
+    activePositionNumber: number | null;
 };
 
 const FormConstructor: FC<Props> = (props) => {
@@ -19,6 +20,7 @@ const FormConstructor: FC<Props> = (props) => {
         isDisabled,
         onPickFieldActive,
         onRemoveField,
+        activePositionNumber,
     } = props;
 
     const [form] = Form.useForm();
@@ -28,11 +30,18 @@ const FormConstructor: FC<Props> = (props) => {
             className={styles.form}
             layout="vertical"
             form={form}
+            onClick={(e) => e.stopPropagation()}
             disabled={!!isDisabled}
             wrapperCol={{ span: 8 }}
         >
             {formComponentsState.map((config) => (
                 <FieldWithButton
+                    style={{
+                        border:
+                            config.position === activePositionNumber
+                                ? "1px solid red"
+                                : "",
+                    }}
                     Component={config.Component}
                     fieldValues={config.data}
                     key={config.position}
@@ -50,7 +59,6 @@ const FormConstructor: FC<Props> = (props) => {
                             />
                             <AddButton
                                 onClick={(e) => {
-                                    e.stopPropagation();
                                     onPickFieldActive(config.position);
                                 }}
                                 icon={

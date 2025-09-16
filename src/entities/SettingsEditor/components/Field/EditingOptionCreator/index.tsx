@@ -1,8 +1,10 @@
 import type { EditingFieldProps } from "@/entities/SettingsEditor/types";
-import { FlexInLine } from "@/shared/components";
+import { DeleteButton, FlexInLine } from "@/shared/components";
+import ComponentWithButtons from "@/shared/components/ComponentWithButtons";
 import { useInput } from "@/shared/hooks";
 import type { IOption } from "@/shared/types/selelct";
 import { Button, Flex, Input, Typography } from "antd";
+import { X } from "lucide-react";
 import { useMemo, type FC } from "react";
 
 type Props = EditingFieldProps<"options">;
@@ -31,6 +33,10 @@ const SelectOptionCreator: FC<Props> = (props) => {
 
         setValueData("");
         setLabelData("");
+    };
+
+    const onRemoveOption = (val: string) => {
+        onChange((value ?? []).filter((el) => el.value !== val));
     };
 
     return (
@@ -65,10 +71,22 @@ const SelectOptionCreator: FC<Props> = (props) => {
                 </Flex>
             </Flex>
 
-            {value?.map((el: IOption) => (
-                <Typography.Paragraph strong key={el.value}>
-                    {el.label} {`(${el.value})`}
-                </Typography.Paragraph>
+            {value?.map((option: IOption) => (
+                <ComponentWithButtons
+                    key={option.value}
+                    buttonsBlock={
+                        <DeleteButton
+                            onClick={() => onRemoveOption(option.value)}
+                            icon={
+                                <X size={16} color="#ffffff" strokeWidth={1} />
+                            }
+                        />
+                    }
+                >
+                    <Typography.Text strong>
+                        {option.label} {`(${option.value})`}
+                    </Typography.Text>
+                </ComponentWithButtons>
             ))}
         </Flex>
     );

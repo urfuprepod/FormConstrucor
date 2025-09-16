@@ -4,7 +4,7 @@ import type {
     Arch,
     SettingsFieldsStatic,
 } from "../types/constructor";
-import React from "react";
+import React, { useRef } from "react";
 
 type Props<T extends SettingsFieldsStatic> = {
     Component: ComponentConfig<T>["Component"];

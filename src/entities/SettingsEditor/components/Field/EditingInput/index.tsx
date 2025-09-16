@@ -1,4 +1,5 @@
 import type { EditingFieldProps } from "@/entities/SettingsEditor/types";
+import { useDebounce } from "@/shared/hooks";
 import { Input } from "antd";
 import { type FC } from "react";
 
@@ -8,15 +9,17 @@ const EditingField: FC<Props> = (props) => {
     const { propertyName, value, onChange, maxLength, minLength, placeholder } =
         props;
 
+    const { value: localValue, setValue } = useDebounce(value, onChange);
+
     return (
         <Input
             id={propertyName}
-            value={value}
+            value={localValue}
             minLength={minLength}
             maxLength={maxLength}
             name={propertyName}
             placeholder={placeholder}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => setValue(e.target.value)}
         />
     );
 };

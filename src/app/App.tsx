@@ -3,7 +3,7 @@ import {
     useActiveField,
     useComponentConfig,
 } from "../entities/FormConstructor/hooks";
-import { Col, ConfigProvider, Flex, Row, Space, Spin } from "antd";
+import { Col, ConfigProvider, Row, Spin } from "antd";
 import ComponentPalette from "@/widgets/Palette";
 import FormConstructor from "@/widgets/FormConstructor";
 import "./main.css";
@@ -48,6 +48,7 @@ function App() {
                     <FormConstructor
                         formComponentsState={fields}
                         isDisabled={isLoadingFields}
+                        activePositionNumber={activePositionNumber}
                         onRemoveField={removeField}
                         onPickFieldActive={setActivePositionNumber}
                     />

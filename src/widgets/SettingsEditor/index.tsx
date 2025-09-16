@@ -1,20 +1,16 @@
 import { commonProps } from "@/entities/FormConstructor/constants";
+import { useCalculatetriggerSettings } from "@/entities/FormConstructor/hooks";
 import { editingFieldsDictionary } from "@/entities/SettingsEditor/constants";
 import { getSettingsValues } from "@/shared/methods";
 import {
-    isInputField,
-    isNumberField,
-    isSelectField,
     type Arch,
     type ComponentConfigWithStateArray,
     type FieldProps,
-    type FieldType,
-    type SettingsField,
     type SettingsFieldsStatic,
 } from "@/shared/types/constructor";
-import { Checkbox, Form, Input, InputNumber, Select } from "antd";
+import { Form } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect, type FC } from "react";
 
 type Props = {
@@ -32,6 +28,8 @@ const SettingsEditor: FC<Props> = (props) => {
 
     const onValuesChange = (_: any, allValues: Arch<SettingsFieldsStatic>) => {
         updateField(activeItem.position, allValues);
+   
+        // setLocalData(allValues);
     };
 
     const joined = [...commonProps, ...activeItem.settings];
@@ -41,7 +39,12 @@ const SettingsEditor: FC<Props> = (props) => {
             ...getSettingsValues(joined),
             ...activeItem.data,
         });
+        setLocalData(activeItem.data);
     }, [activeItem.position]);
+
+    const [localData, setLocalData] = useState<Arch<SettingsFieldsStatic>>(
+        activeItem.data
+    );
 
     return (
         <Form<Arch<SettingsFieldsStatic>>
@@ -57,9 +60,10 @@ const SettingsEditor: FC<Props> = (props) => {
                     name={field.propertyName}
                     label={field.labelText}
                     labelCol={{
-                        // span: 24,
+                        span: field.type === "checkbox" ? 20 : 24,
                         style: {
                             fontWeight: 500,
+                            textAlign: "left",
                         },
                     }}
                     // wrapperCol={{ span: 24, style: { width: "100%" } }}
@@ -76,10 +80,15 @@ const SettingsEditor: FC<Props> = (props) => {
                     <Field
                         field={field}
                         form={form}
-                        onChange={(value: any) =>
-                            form.setFieldsValue({
-                                [field.propertyName]: value,
-                            })
+                        onChange={
+                            (value: any) =>
+                                form.setFieldsValue({
+                                    [field.propertyName]: value,
+                                })
+                            // setLocalData({
+                            //     ...localData,
+                            //     [field.propertyName]: value,
+                            // })
                         }
                     />
                 </Form.Item>
@@ -100,14 +109,26 @@ const Field: FC<{
     const value = form.getFieldValue(propertyName);
 
     const [guardFn, Component] = editingFieldsDictionary[field.type];
+
+    useCalculatetriggerSettings(
+        value,
+        form.getFieldsValue(),
+        onChange,
+        field.dependsOn
+    );
+
     if (guardFn(field))
-        return React.createElement(Component, {
-            ...field.options,
-            placeholder,
-            propertyName,
-            value,
-            onChange,
-        });
+        return (
+            <>
+                {React.createElement(Component, {
+                    ...field.options,
+                    placeholder,
+                    propertyName,
+                    value,
+                    onChange,
+                })}
+            </>
+        );
 
     return null;
 };

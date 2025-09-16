@@ -1,3 +1,5 @@
+import type { SettingsFieldsStatic } from "@/shared/types/constructor";
+
 export const inputSettings = [
     {
         type: "number",
@@ -5,7 +7,7 @@ export const inputSettings = [
         propertyName: "borderWidth",
         labelText: "Толщина рамки",
     },
-] as const;
+] as const satisfies SettingsFieldsStatic;
 
 export type InputSettingsProps = typeof inputSettings;
 export const componentName: string = 'Input';

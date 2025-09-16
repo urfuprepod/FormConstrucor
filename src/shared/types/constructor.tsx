@@ -20,6 +20,20 @@ export type SettingsField<
     placeholder?: string;
     defaultValue?: GetFieldValueType<K>;
     labelText: string;
+    dependsOn?: DependedValue<K>[];
+};
+
+export type DependedValue<
+    K extends FieldType,
+    T extends FieldType = "checkbox" | "input" | "number" | "select" | "options"
+> = {
+    propertyName: string;
+    type: T;
+    triggeredValue: GetFieldValueType<T>;
+    callback: (
+        val: GetFieldValueType<K>,
+        dependedValue?: GetFieldValueType<T>
+    ) => GetFieldValueType<K>;
 };
 
 export type SettingsFieldsStatic = readonly FieldProps[];
