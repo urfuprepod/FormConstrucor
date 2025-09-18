@@ -1,7 +1,7 @@
 import type { commonProps } from "@/entities/FormConstructor/constants";
 import type { IOption } from "./selelct";
 import React from "react";
-import type { fieldVariantsOptions } from "../constants";
+import type { fieldVariantsOptions, FormState } from "../constants";
 
 export type FieldType = "checkbox" | "input" | "number" | "select" | "options";
 
@@ -39,9 +39,8 @@ export type DependedValue<
 
 export type SettingsFieldsStatic = readonly FieldProps[];
 
-export type InputFieldProps = SettingsField<"input"> & {
-    options?: { maxLength?: number; minLength?: number };
-};
+export type InputFieldProps = SettingsField<"input"> &
+    OptionProps<{ maxLength: number; minLength: number }>;
 
 export const isInputField = (item: SettingsField): item is InputFieldProps => {
     return item.type === "input";
@@ -73,6 +72,7 @@ export const isSelectField = (
 
 type OptionProps<T extends Record<string, any>> = {
     options?: Partial<T>;
+    optionsGenerator?: (formSettings: Record<string, any>) => Partial<T>;
 };
 
 export type OptionCreatorFieldProps = SettingsField<"options"> &
@@ -115,14 +115,12 @@ export type ComponentConfig<T extends SettingsFieldsStatic> = {
     name: string;
     config: {
         hide?: {
-            type: FieldVariant,
-            field: string,
-            value: string | null
-        }
-    }
+            type: FieldVariant;
+            field: string;
+            value: string | null;
+        };
+    };
 };
-
-
 
 export type FieldVariant = (typeof fieldVariantsOptions)[number]["value"];
 

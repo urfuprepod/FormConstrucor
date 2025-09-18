@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    visibility: hidden;
+    margin-block: 10px;
+    opacity: 0;
+    max-height: 0;
+
+    &.active {
+        visibility: visible;
+        opacity: 1;
+        max-height: fit-content;
+        transition: visibility 0s, opacity 1.3s, max-height 0s linear;
+    }
+}

@@ -18,10 +18,14 @@ const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
 
     return (
         <FieldWithButton
-            Component={config.Component}
-            fieldValues={{
-                ...getSettingsValues([...config.settings]),
-                ...commonPropsToObjectForm,
+            isPaletteMode
+            componentConfiguration={{
+                ...config,
+                data: {
+                    ...getSettingsValues([...config.settings]),
+                    ...commonPropsToObjectForm,
+                },
+                position: 0,
             }}
             buttonsBlock={
                 <>

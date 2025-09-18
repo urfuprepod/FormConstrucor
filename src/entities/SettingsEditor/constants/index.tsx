@@ -6,13 +6,9 @@ import {
     isSelectField,
 } from "@/shared/types/constructor";
 import type { EditingSettingsConfig } from "../types";
-import {
-    EditingCheckbox,
-    EditingField,
-    EditingInputNumber,
-    EditingSelect,
-} from "../components/Field";
-import SelectOptionCreator from "../components/Field/EditingOptionCreator";
+
+import { EditingCheckbox, EditingField, EditingInputNumber, EditingSelect } from "@/shared/components/Field";
+import SelectOptionCreator from "@/shared/components/Field/EditingOptionCreator";
 
 export const editingFieldsDictionary: EditingSettingsConfig = {
     input: [isInputField, EditingField],

@@ -1,21 +1,22 @@
 import { Flex } from "antd";
 import React, { type PropsWithChildren } from "react";
+import styles from "./style.module.css";
 
 type Props = {
     buttonsBlock?: React.ReactNode;
     style?: React.CSSProperties;
-    className?: string
-    ref?: React.RefObject<HTMLDivElement | null>
+    className?: string;
+    ref?: React.RefObject<HTMLDivElement | null>;
 };
 
-const CompnentWithButton = (props: PropsWithChildren<Props>) => {
+const ComponentWithButton = (props: PropsWithChildren<Props>) => {
     const { buttonsBlock, className, children, style, ref } = props;
     return (
         <Flex gap={7} align="end" className={className} ref={ref} style={style}>
-            {children}
+            <div className={styles.container}>{children}</div>
             {buttonsBlock}
         </Flex>
     );
 };
 
-export default CompnentWithButton;
+export default ComponentWithButton;

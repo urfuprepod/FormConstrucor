@@ -1,5 +1,6 @@
+import { useFormConstructor } from "@/app/store/useFormConstructor";
 import { commonProps } from "@/entities/FormConstructor/constants";
-import { useFormConstructorContext } from "@/entities/FormConstructor/context";
+import { useFormConstructorContext } from "@/entities/FormConstructor/context/formConstructor";
 import { useCalculatetriggerSettings } from "@/entities/FormConstructor/hooks";
 import { HideConstructor } from "@/entities/SettingsEditor/components";
 import { editingFieldsDictionary } from "@/entities/SettingsEditor/constants";
@@ -12,7 +13,7 @@ import {
 } from "@/shared/types/constructor";
 import { Form } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useEffect, type FC } from "react";
 
 type Props = {
@@ -30,18 +31,11 @@ const SettingsEditor: FC<Props> = (props) => {
 
     const onValuesChange = (_: any, allValues: Arch<SettingsFieldsStatic>) => {
         updateField(activeItem.position, allValues);
-
-        // setLocalData(allValues);
     };
 
     const joined = [...commonProps, ...activeItem.settings];
 
     useEffect(() => {
-
-        console.log({
-            ...getSettingsValues(joined),
-            ...activeItem.data,
-        }, 'jopa')
         form.setFieldsValue({
             ...getSettingsValues(joined),
             ...activeItem.data,
@@ -126,16 +120,21 @@ const Field: FC<{
         field.dependsOn
     );
 
+    const { formState } = useFormConstructor();
+
+    const opts =
+        field?.optionsGenerator?.(formState) ?? field.options ?? undefined;
+
     if (guardFn(field))
         return (
             <>
-                {React.createElement(Component, {
-                    ...field.options,
-                    placeholder,
-                    propertyName,
-                    value,
-                    onChange,
-                })}
+                <Component
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                    propertyName={propertyName}
+                    {...opts}
+                />
             </>
         );
 

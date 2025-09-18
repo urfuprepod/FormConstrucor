@@ -21,6 +21,6 @@ export type EditingFieldProps<T extends FieldType> =
 export type EditingSettingsConfig = {
     [K in FieldType]: [
         (item: SettingsField<FieldType>) => item is FindAdvanced<K>,
-        FC<EditingFieldProps<FieldType>>
+        FC<EditingFieldProps<K>>
     ];
 };

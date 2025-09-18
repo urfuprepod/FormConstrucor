@@ -9,8 +9,7 @@ import FormConstructor from "@/widgets/FormConstructor";
 import "./main.css";
 import SettingsEditor from "@/widgets/SettingsEditor";
 import { useRef } from "react";
-import { getFormConfig } from "@/shared/api/fakeApi";
-import { FormConstructorContext } from "@/entities/FormConstructor/context";
+import { FormConstructorContext } from "@/entities/FormConstructor/context/formConstructor";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);
@@ -26,7 +25,7 @@ function App() {
         removeField,
         isLoadingFields,
         updateConfig,
-    } = useComponentConfig(activePositionNumber, getFormConfig);
+    } = useComponentConfig(activePositionNumber);
 
     return (
         <ConfigProvider

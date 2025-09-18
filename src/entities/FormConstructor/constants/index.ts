@@ -1,4 +1,5 @@
 import { getSettingsValues } from "@/shared/methods";
+import type { SettingsFieldsStatic } from "@/shared/types/constructor";
 
 export const commonProps = [
     {
@@ -33,6 +34,19 @@ export const commonProps = [
         placeholder: "Введите label или оставьте пустым",
         defaultValue: "Form Label",
     },
-] as const;
+    {
+        type: "number",
+        propertyName: "columnsLength",
+        labelText: "Количество занимаемых колонок",
+        placeholder: "Кол-во колонок",
+        defaultValue: 1,
+        optionsGenerator: (form) => {
+            return {
+                min: 1,
+                max: +form.columnLength,
+            };
+        },
+    },
+] as const satisfies SettingsFieldsStatic;
 
 export const commonPropsToObjectForm = getSettingsValues(commonProps);
