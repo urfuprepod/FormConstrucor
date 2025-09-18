@@ -98,23 +98,23 @@ const FormConstructor: FC<Props> = (props) => {
                     ))}
                 </Row>
 
-                <FlexInLine>
-                    <Button
-                        onClick={() =>
-                            downloadJson({ fields: formComponentsState })
-                        }
-                        type="primary"
-                        htmlType="submit"
-                    >
-                        Скачать форму
-                    </Button>
-
+                <FlexInLine gap={8}>
                     <Button
                         onClick={() => {
                             setIerarchy((prev) => prev.concat([]));
                         }}
                         type="primary"
+                    >
+                        Добавить строку
+                    </Button>
+
+                    <Button
+                        onClick={() =>
+                            downloadJson({ fields: formComponentsState })
+                        }
+                        variant="solid"
                         color="green"
+                        
                     >
                         Скачать форму
                     </Button>

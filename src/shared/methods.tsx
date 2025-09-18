@@ -80,3 +80,49 @@ export const generateLabelName = (): string => {
 
     return [messages[first], messages[second]].join(" ");
 };
+
+export function flattenAndProcess<K, T extends NestedArray<K> = NestedArray<K>>(
+    input: T,
+    callbackFn: (item: K) => K,
+    id?: number,
+    idName?: keyof K
+): T {
+    function recursiveTraverse(item: NestedArray<K>): NestedArray<K> {
+        if (Array.isArray(item)) {
+            return item.map((subItem) => recursiveTraverse(subItem));
+        } else {
+            const element = item;
+            if (
+                id !== undefined &&
+                idName !== undefined &&
+                element[idName] === id
+            ) {
+                return callbackFn(element);
+            }
+            return element;
+        }
+    }
+
+    return recursiveTraverse(input) as T;
+}
+
+export function flattenAndFind<K, T extends NestedArray<K> = NestedArray<K>>(
+    input: T,
+    id: number,
+    idName: keyof K
+): T {
+    function recursiveTraverse(item: NestedArray<K>): K | null {
+        let result: K | null = null;
+
+        if (Array.isArray(item)) {
+            result = recursiveTraverse(item);
+        } else {
+            if (item[idName] === id) result = item;
+        }
+
+        return result;
+    }
+
+    return recursiveTraverse(input) as T;
+}
+

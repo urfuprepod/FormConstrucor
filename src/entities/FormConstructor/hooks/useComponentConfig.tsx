@@ -1,4 +1,6 @@
 import {
+    flattenAndFind,
+    flattenAndProcess,
     generateLabelName,
     getSettingsValues,
     parseJson,
@@ -19,28 +21,28 @@ export function useComponentConfig(
     activePositionNumber: number | null,
     initialFunction?: () => Promise<string>
 ) {
-    const [fields, setFields] = useState<ComponentConfigWithStateArray>([]);
+    const [fields, setFields] = useState<ComponentConfigWithStateArray[]>([[]]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (initialFunction) {
-            setIsLoading(true);
-            initialFunction()
-                .then(parseJson<ComponentConfigWithStateArrayDTO>)
-                .then((data) =>
-                    setFields(
-                        data.map((el) => ({
-                            ...el,
-                            Component: fieldsList.find(
-                                (item) => item.name === el.name
-                            )!
-                                .Component as ComponentConfigWithState<SettingsFieldsStatic>["Component"],
-                        }))
-                    )
-                )
-                .finally(() => setIsLoading(false));
-        }
-    }, [initialFunction]);
+    // useEffect(() => {
+    //     if (initialFunction) {
+    //         setIsLoading(true);
+    //         initialFunction()
+    //             .then(parseJson<ComponentConfigWithStateArrayDTO>)
+    //             .then((data) =>
+    //                 setFields(
+    //                     data.map((el) => ({
+    //                         ...el,
+    //                         Component: fieldsList.find(
+    //                             (item) => item.name === el.name
+    //                         )!
+    //                             .Component as ComponentConfigWithState<SettingsFieldsStatic>["Component"],
+    //                     }))
+    //                 )
+    //             )
+    //             .finally(() => setIsLoading(false));
+    //     }
+    // }, [initialFunction]);
 
     const pushNewField = useCallback(
         <T extends SettingsFieldsStatic>(config: ComponentConfig<T>) => {
@@ -51,14 +53,16 @@ export function useComponentConfig(
 
             data.label = generateLabelName();
 
-            setFields((prev) => [
-                ...prev,
-                {
+            setFields((prev) => {
+                const lastElem = prev.at(-1);
+                if (!lastElem) return prev;
+                const newItem = {
                     ...config,
                     position: prev.length + 1,
                     data,
-                } as ComponentConfigWithState<SettingsFieldsStatic>,
-            ]);
+                } as ComponentConfigWithState<SettingsFieldsStatic>;
+                return prev.slice(0, -1).concat([...lastElem, newItem]);
+            });
         },
         [setFields]
     );
@@ -66,22 +70,27 @@ export function useComponentConfig(
     const unshiftNewField = useCallback(
         <T extends SettingsFieldsStatic>(config: ComponentConfig<T>) => {
             setFields((prev) => {
-                const actual = [
-                    {
-                        ...config,
-                        position: 1,
-                        data: {
-                            ...getSettingsValues([...config.settings]),
-                            ...commonPropsToObjectForm,
-                        },
-                    } as ComponentConfigWithState<SettingsFieldsStatic>,
-                    ...prev.map((item) => ({
-                        ...item,
-                        position: item.position + 1,
-                    })),
-                ];
+                const firstElem = prev.at(0);
+                if (!firstElem) return prev;
 
-                return actual;
+                const newItem = {
+                    ...config,
+                    position: 1,
+                    data: {
+                        ...getSettingsValues([...config.settings]),
+                        ...commonPropsToObjectForm,
+                    },
+                } as ComponentConfigWithState<SettingsFieldsStatic>;
+
+                return [
+                    [newItem, ...firstElem],
+                    ...prev.slice(1).map((block) =>
+                        block.map((item) => ({
+                            ...item,
+                            position: item.position + 1,
+                        }))
+                    ),
+                ];
             });
         },
         [setFields]
@@ -92,8 +101,15 @@ export function useComponentConfig(
         data: Arch<T>
     ) => {
         setFields((prev) =>
-            prev.map((field) =>
-                field.position === positionNumber ? { ...field, data } : field
+            flattenAndProcess(
+                prev,
+                (field: ComponentConfigWithState<SettingsFieldsStatic>) =>
+                    ({
+                        ...field,
+                        data,
+                    } as ComponentConfigWithState<SettingsFieldsStatic>),
+                positionNumber,
+                "position"
             )
         );
     };
@@ -106,16 +122,25 @@ export function useComponentConfig(
         val: ComponentConfig<SettingsFieldsStatic>["config"][T]
     ) => {
         setFields((prev) =>
-            prev.map((field) =>
-                field.position === positionNumber
-                    ? { ...field, config: { ...field.config, [key]: val } }
-                    : field
+            flattenAndProcess(
+                prev,
+                (field: ComponentConfigWithState<SettingsFieldsStatic>) => ({
+                    ...field,
+                    config: { ...field.config, [key]: val },
+                }),
+                positionNumber,
+                "position"
             )
         );
     };
 
     const removeField = (positionNumber: number) => {
         setFields((prev) => {
+
+            prev.map(rowField => {
+                
+            })
+
             const actualFields = prev.reduce(
                 (acc: ComponentConfigWithStateArray, cur) => {
                     if (cur.position === positionNumber) return acc;
@@ -137,7 +162,7 @@ export function useComponentConfig(
         let result = undefined;
 
         if (activePositionNumber !== null) {
-            result = fields.find((el) => el.position === activePositionNumber);
+            result = flattenAndFind(fields, activePositionNumber, "position");
         }
 
         return result;
@@ -151,6 +176,6 @@ export function useComponentConfig(
         removeField,
         unshiftNewField,
         isLoadingFields: isLoading,
-        updateConfig
+        updateConfig,
     };
 }
