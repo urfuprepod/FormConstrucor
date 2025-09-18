@@ -1,7 +1,12 @@
 import { Button, Form, Row } from "antd";
 import { useEffect, useState, type FC } from "react";
 import { downloadJson } from "@/shared/methods";
-import { AddButton, DeleteButton, FieldWithButton } from "@/shared/components";
+import {
+    AddButton,
+    DeleteButton,
+    FieldWithButton,
+    FlexInLine,
+} from "@/shared/components";
 import { ThumbsUp, Trash2 } from "lucide-react";
 import styles from "./styles.module.css";
 import type { ComponentConfigWithStateArray } from "@/shared/types/constructor";
@@ -29,11 +34,13 @@ const FormConstructor: FC<Props> = (props) => {
     const [isActiveSettings, setIsActiveSettings] = useState<boolean>(false);
     const { formState } = useFormConstructor();
 
+    const [ierarchy, setIerarchy] = useState<any[][]>([[]]);
+
     return (
         <>
             <Button
                 color="primary"
-                variant={isActiveSettings ?  "outlined" : 'solid'}
+                variant={isActiveSettings ? "outlined" : "solid"}
                 onClick={() => setIsActiveSettings((prev) => !prev)}
             >
                 Настройки формы
@@ -91,15 +98,27 @@ const FormConstructor: FC<Props> = (props) => {
                     ))}
                 </Row>
 
-                <Button
-                    onClick={() =>
-                        downloadJson({ fields: formComponentsState })
-                    }
-                    type="primary"
-                    htmlType="submit"
-                >
-                    Скачать форму
-                </Button>
+                <FlexInLine>
+                    <Button
+                        onClick={() =>
+                            downloadJson({ fields: formComponentsState })
+                        }
+                        type="primary"
+                        htmlType="submit"
+                    >
+                        Скачать форму
+                    </Button>
+
+                    <Button
+                        onClick={() => {
+                            setIerarchy((prev) => prev.concat([]));
+                        }}
+                        type="primary"
+                        color="green"
+                    >
+                        Скачать форму
+                    </Button>
+                </FlexInLine>
             </Form>
         </>
     );
