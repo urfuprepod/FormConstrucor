@@ -127,7 +127,7 @@ export type FieldVariant = (typeof fieldVariantsOptions)[number]["value"];
 export type ComponentConfigArray = Array<ComponentConfig<SettingsFieldsStatic>>;
 
 export type ComponentConfigWithState<T extends SettingsFieldsStatic> =
-    ComponentConfig<T> & { position: number; data: Arch<T> };
+    ComponentConfig<T> & { position: number; data: Arch<T>, rowNumber: number };
 
 export type ComponentConfigWithStateArray = Array<
     ComponentConfigWithState<SettingsFieldsStatic>

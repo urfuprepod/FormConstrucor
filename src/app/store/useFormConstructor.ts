@@ -24,12 +24,18 @@ interface IFormConstructorState {
     ) => void;
     formState: FormState;
     mutate: <K extends FieldType>(key: string, type: K, val: unknown) => void;
+
+    rowNumber: number;
+    increaseRowNumber: () => void;
 }
 
 export const useFormConstructor = create<IFormConstructorState>((set) => ({
     fields: [],
     formState: getSettingsValues(formFieldSetting),
-
+    rowNumber: 0,
+    increaseRowNumber() {
+        set((state) => ({ rowNumber: state.rowNumber + 1 }));
+    },
     mutate: (key, type, value) => {
         set((state) => {
             const keyState = key as FormStateKeys;

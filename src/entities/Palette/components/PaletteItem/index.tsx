@@ -21,6 +21,7 @@ const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
             isPaletteMode
             componentConfiguration={{
                 ...config,
+                rowNumber: 0,
                 data: {
                     ...getSettingsValues([...config.settings]),
                     ...commonPropsToObjectForm,

@@ -23,7 +23,7 @@ export const formFieldSetting = [
         type: "select",
         propertyName: "columnLength",
         labelText: "Количество колонок",
-        defaultValue: "24",
+        defaultValue: "2",
         options: {
             options: [
                 { label: "2", value: "2" },

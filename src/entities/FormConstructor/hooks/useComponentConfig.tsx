@@ -14,6 +14,7 @@ import type {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { commonPropsToObjectForm } from "../constants";
 import { fieldsList } from "../config";
+import { useFormConstructor } from "@/app/store/useFormConstructor";
 
 export function useComponentConfig(
     activePositionNumber: number | null,
@@ -21,6 +22,7 @@ export function useComponentConfig(
 ) {
     const [fields, setFields] = useState<ComponentConfigWithStateArray>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { rowNumber } = useFormConstructor();
 
     useEffect(() => {
         if (initialFunction) {
@@ -56,11 +58,12 @@ export function useComponentConfig(
                 {
                     ...config,
                     position: prev.length + 1,
+                    rowNumber,
                     data,
                 } as ComponentConfigWithState<SettingsFieldsStatic>,
             ]);
         },
-        [setFields]
+        [setFields, rowNumber]
     );
 
     const unshiftNewField = useCallback(
@@ -70,6 +73,7 @@ export function useComponentConfig(
                     {
                         ...config,
                         position: 1,
+                        rowNumber: 1,
                         data: {
                             ...getSettingsValues([...config.settings]),
                             ...commonPropsToObjectForm,
@@ -151,6 +155,6 @@ export function useComponentConfig(
         removeField,
         unshiftNewField,
         isLoadingFields: isLoading,
-        updateConfig
+        updateConfig,
     };
 }
