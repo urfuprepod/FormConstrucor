@@ -1,11 +1,9 @@
-import { useFormConstructor } from "@/app/store/useFormConstructor";
-import { editingFieldsDictionary } from "@/entities/SettingsEditor/constants";
-import type { FieldProps } from "@/shared/types/constructor";
 import { type FC } from "react";
 import styles from "./index.module.css";
 import clsx from "clsx";
-import { ComponentWithLabel } from "@/shared/components";
+import { ComponentWithLabel, SettingField } from "@/shared/components";
 import { formFieldSetting } from "@/shared/constants";
+import { useFormConstructor } from "@/app/store/useFormConstructor";
 
 type Props = {
     isActive: boolean;
@@ -24,7 +22,7 @@ const MainFormSettings: FC<Props> = (props) => {
                     fieldName={el.propertyName}
                     key={el.propertyName}
                 >
-                    <Field
+                    <SettingField
                         value={formState[el.propertyName]}
                         field={el}
                         onChange={(val) => {
@@ -38,30 +36,3 @@ const MainFormSettings: FC<Props> = (props) => {
 };
 
 export default MainFormSettings;
-
-const Field: FC<{
-    field: FieldProps;
-    value: any;
-    onChange: (val: any) => void;
-}> = (props) => {
-    const { field, value, onChange } = props;
-
-    const { propertyName, placeholder } = field;
-
-    const [guardFn, Component] = editingFieldsDictionary[field.type];
-
-    if (guardFn(field))
-        return (
-            <>
-                <Component
-                    value={value}
-                    onChange={onChange}
-                    placeholder={placeholder}
-                    propertyName={propertyName}
-                    {...field.options}
-                />
-            </>
-        );
-
-    return null;
-};

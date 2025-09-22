@@ -1,0 +1,17 @@
+.container.active {
+    .row-block {
+        visibility: visible;
+    }
+}
+
+.row-block {
+    align-content: center;
+    padding: 3% 5%;
+    border: 2px dashed #0092ff;
+    text-align: center;
+    visibility: hidden;
+
+    * {
+        margin: 0 !important;
+    }
+}

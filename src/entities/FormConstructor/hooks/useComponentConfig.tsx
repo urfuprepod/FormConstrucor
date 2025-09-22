@@ -14,7 +14,7 @@ import type {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { commonPropsToObjectForm } from "../constants";
 import { fieldsList } from "../config";
-import { useFormConstructor } from "@/app/store/useFormConstructor";
+import { useFormState } from "@/app/store/useFormState";
 
 export function useComponentConfig(
     activePositionNumber: number | null,
@@ -22,7 +22,7 @@ export function useComponentConfig(
 ) {
     const [fields, setFields] = useState<ComponentConfigWithStateArray>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { rowNumber } = useFormConstructor();
+    const { rowNumber } = useFormState();
 
     useEffect(() => {
         if (initialFunction) {
@@ -73,7 +73,7 @@ export function useComponentConfig(
                     {
                         ...config,
                         position: 1,
-                        rowNumber: 1,
+                        rowNumber: 0,
                         data: {
                             ...getSettingsValues([...config.settings]),
                             ...commonPropsToObjectForm,
@@ -98,6 +98,19 @@ export function useComponentConfig(
         setFields((prev) =>
             prev.map((field) =>
                 field.position === positionNumber ? { ...field, data } : field
+            )
+        );
+    };
+
+    const updateFieldLayout = (
+        positionNumber: number,
+        updatedFields: { positionNumber?: number; rowNumber?: number }
+    ) => {
+        setFields((prev) =>
+            prev.map((field) =>
+                field.position === positionNumber
+                    ? { ...field, ...updatedFields }
+                    : field
             )
         );
     };
@@ -154,6 +167,7 @@ export function useComponentConfig(
         activeField,
         removeField,
         unshiftNewField,
+        updateFieldLayout,
         isLoadingFields: isLoading,
         updateConfig,
     };

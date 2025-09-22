@@ -1,7 +1,7 @@
 import type { commonProps } from "@/entities/FormConstructor/constants";
 import type { IOption } from "./selelct";
 import React from "react";
-import type { fieldVariantsOptions, FormState } from "../constants";
+import type { fieldVariantsOptions } from "../constants";
 
 export type FieldType = "checkbox" | "input" | "number" | "select" | "options";
 
@@ -38,6 +38,12 @@ export type DependedValue<
 };
 
 export type SettingsFieldsStatic = readonly FieldProps[];
+
+export type FindAdvanced<T extends FieldType> = FieldProps extends infer O
+    ? O extends { type: T }
+        ? O
+        : never
+    : never;
 
 export type InputFieldProps = SettingsField<"input"> &
     OptionProps<{ maxLength: number; minLength: number }>;

@@ -1,4 +1,5 @@
 import type {
+    FieldType,
     ObjectSettingsFormType,
     SettingsFieldsStatic,
 } from "./types/constructor";
@@ -38,3 +39,11 @@ export const formFieldSetting = [
 export type FormStateSettings = typeof formFieldSetting;
 export type FormState = ObjectSettingsFormType<FormStateSettings>;
 export type FormStateKeys = keyof FormState;
+
+export const typeMap: Record<FieldType, (val: unknown) => boolean> = {
+    checkbox: (v) => typeof v === "boolean",
+    number: (v) => typeof v === "number",
+    options: (v) => Array.isArray(v),
+    input: (v) => typeof v === "string",
+    select: (v) => typeof v === "string",
+};

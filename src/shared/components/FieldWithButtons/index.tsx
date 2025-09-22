@@ -3,13 +3,13 @@ import type {
     SettingsFieldsStatic,
     ComponentConfigWithState,
 } from "@/shared/types/constructor";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import ComponentWithButtons from "../ComponentWithButtons";
 import styles from "./style.module.css";
-import { Col, Form, type FormInstance } from "antd";
+import { Col, type FormInstance } from "antd";
 import HiddenContainer from "../HiddenContainer";
-import { useFormConstructor } from "@/app/store/useFormConstructor";
 import { MAX_COLUMNS } from "@/shared/constants";
+import { useFormConstructor } from "@/app/store/useFormConstructor";
 
 type Props<T extends SettingsFieldsStatic> = {
     buttonsBlock?: React.ReactNode;

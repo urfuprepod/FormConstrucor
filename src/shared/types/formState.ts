@@ -1,16 +1,5 @@
-import { formFieldSetting, type FormStateKeys } from "../constants";
-import type {
-    FieldType,
-    GetFieldValueType,
-} from "./constructor";
-
-const typeMap: Record<FieldType, (val: unknown) => boolean> = {
-    checkbox: (v) => typeof v === "boolean",
-    number: (v) => typeof v === "number",
-    options: (v) => Array.isArray(v),
-    input: (v) => typeof v === "string",
-    select: (v) => typeof v === "string",
-};
+import { formFieldSetting, typeMap, type FormStateKeys } from "../constants";
+import type { FieldType, GetFieldValueType } from "./constructor";
 
 export const checkActualValue = <T extends FieldType>(
     name: FormStateKeys,

@@ -1,3 +1,4 @@
 import MainFormSettings from "./MainFormSettings";
+import FormRow from "./FormRow";
 
-export {MainFormSettings}
+export {MainFormSettings, FormRow}

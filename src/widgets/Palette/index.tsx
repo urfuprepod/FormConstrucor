@@ -2,29 +2,21 @@ import { Flex } from "antd";
 import styles from "./styles.module.css";
 import { PaletteItem } from "@/entities/Palette/components";
 import React, { type FC } from "react";
-import type {
-    ComponentConfig,
-    SettingsFieldsStatic,
-} from "@/shared/types/constructor";
+import type { ComponentConfig } from "@/shared/types/constructor";
 import { fieldsList } from "@/entities/FormConstructor/config";
+import { useFormConstructor } from "@/app/store/useFormConstructor";
 
-type PropsFunction = <T extends SettingsFieldsStatic>(
-    component: ComponentConfig<T>
-) => void;
+const ComponentPalette: FC = React.memo(() => {
+    const { pushNewField, unshiftNewField } = useFormConstructor();
 
-type Props = {
-    onPushField: PropsFunction;
-    onUnshiftField: PropsFunction;
-};
-
-const ComponentPalette: FC<Props> = React.memo((props) => {
     return (
         <Flex vertical gap={12} className={styles.palette}>
             {fieldsList.map((cfg, i) => (
                 <PaletteItem
                     key={i}
                     config={cfg as ComponentConfig<typeof cfg.settings>}
-                    {...props}
+                    onPushField={pushNewField}
+                    onUnshiftField={unshiftNewField}
                 />
             ))}
         </Flex>

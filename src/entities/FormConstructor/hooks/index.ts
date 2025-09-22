@@ -1,5 +1,6 @@
 import { useComponentConfig } from "./useComponentConfig";
 import { useActiveField } from "./useActiveField";
 import { useCalculatetriggerSettings } from "./useCalculateTriggerSettings";
+import { useFormData } from "./useFormData";
 
-export { useComponentConfig, useActiveField, useCalculatetriggerSettings };
+export { useComponentConfig, useFormData, useActiveField, useCalculatetriggerSettings };

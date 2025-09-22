@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import type {
     ComponentConfig,
+    ComponentConfigWithStateArray,
     ObjectSettingsFormType,
     SettingsFieldsStatic,
 } from "./types/constructor";
@@ -79,4 +80,17 @@ export const generateLabelName = (): string => {
     }
 
     return [messages[first], messages[second]].join(" ");
+};
+
+export const findActualIndexOnFields = (
+    rowNumber: number,
+    fields: ComponentConfigWithStateArray,
+    type: "startRow" | "endRow"
+) => {
+    const filtered = fields.filter((el) => el.rowNumber === rowNumber);
+    if (!filtered.length) return fields.length;
+
+    let preIndex = filtered.sort().at(type === "startRow" ? 0 : -1)?.position ?? -1;
+    if (type === 'endRow') preIndex++;
+    return preIndex
 };
