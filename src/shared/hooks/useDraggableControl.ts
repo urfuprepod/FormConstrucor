@@ -3,17 +3,18 @@ import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useMemo, useState } from "react";
 import {
     isComponentConfigWithState,
-    type ComponentConfig,
     type ComponentConfigWithState,
     type SettingsFieldsStatic,
 } from "../types/constructor";
+import { checkSideTypeByItemAndCenterPosition } from "../methods";
+import type { DraggableType } from "../types/draggable";
 
 export const useDraggableControl = () => {
     const [activeDraggableId, setActiveDraggableId] = useState<string | null>(
         null
     );
 
-    const { pushNewField } = useFormConstructor();
+    const { pushAndReplaceField } = useFormConstructor();
 
     const handleDragStart = (event: DragStartEvent): void => {
         setActiveDraggableId(event.active.id as string);
@@ -30,28 +31,33 @@ export const useDraggableControl = () => {
                 data: ComponentConfigWithState<SettingsFieldsStatic>,
                 objectId?: string,
                 zoneId?: string,
-                direction?: "startRow" | "endRow"
+                direction?: DraggableType,
+                oldPosition?: number
             ) => void
         >
     >(() => {
         return {
             create: (data: ComponentConfigWithState<SettingsFieldsStatic>) =>
-                pushNewField(data),
+                pushAndReplaceField(data),
             row: (
                 data: ComponentConfigWithState<SettingsFieldsStatic>,
                 objectId?: string,
                 zoneId?: string,
-                direction?: "startRow" | "endRow"
+                direction?: DraggableType,
+                oldPosition?: number
             ) => {
                 if (!objectId || !zoneId) return;
-                if (objectId.includes("p")) {
-                    const actualRowNumber = +zoneId.split("-").at(-1)!;
+                const actualRowNumber = +zoneId.split("-").at(-1)!;
 
-                    pushNewField(data, actualRowNumber, direction ?? "endRow");
-                }
+                pushAndReplaceField(
+                    data,
+                    actualRowNumber,
+                    direction ?? "endRow",
+                    objectId.includes("p") ? undefined : oldPosition
+                );
             },
         };
-    }, [pushNewField]);
+    }, [pushAndReplaceField]);
 
     const handleDragEnd = (event: DragEndEvent): void => {
         handleRemoveDraggableId();
@@ -62,9 +68,7 @@ export const useDraggableControl = () => {
         const overId = String(event.over.id);
 
         const centerDrop = event.over.rect.left + event.over.rect.width / 2;
-        const variant = event.delta.x < centerDrop ? "startRow" : "endRow";
-
-        console.log(centerDrop,  event.delta.x, variant)
+        const variant = checkSideTypeByItemAndCenterPosition(event, centerDrop);
 
         if (isComponentConfigWithState(data.current?.data)) {
             Object.entries(callbackDict).find(([key]) =>
@@ -73,7 +77,8 @@ export const useDraggableControl = () => {
                 data.current.data,
                 event.active.id as string,
                 overId,
-                variant
+                variant,
+                data.current.data.position
             );
         }
     };

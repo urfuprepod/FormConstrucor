@@ -25,29 +25,38 @@ const FormConstructor: FC<Props> = (props) => {
     const [isActiveSettings, setIsActiveSettings] = useState<boolean>(false);
     const { fields: formComponentsState, rowNumber } = useFormConstructor();
 
-    const groupedFormComponentsByRowLevel = useMemo<
-        Map<number, ComponentConfigWithStateArray>
-    >(() => {
-        return formComponentsState.reduce(
-            (
-                acc: Map<number, ComponentConfigWithStateArray>,
-                cur: ComponentConfigWithStateArray[number]
-            ) => {
-                const items = acc.get(cur.rowNumber);
-                if (!items) {
-                    acc.set(cur.rowNumber, [cur]);
-                    return acc;
-                }
+    const groupedFormComponentsByRowLevel = useMemo<{
+        mapObject: Map<number, ComponentConfigWithStateArray>;
+        arrayForm: [number, ComponentConfigWithStateArray][];
+    }>(() => {
+        const mappedGroups: Map<number, ComponentConfigWithStateArray> =
+            formComponentsState.reduce(
+                (
+                    acc: Map<number, ComponentConfigWithStateArray>,
+                    cur: ComponentConfigWithStateArray[number]
+                ) => {
+                    const items = acc.get(cur.rowNumber);
+                    if (!items) {
+                        acc.set(cur.rowNumber, [cur]);
+                        return acc;
+                    }
 
-                acc.set(cur.rowNumber, items.concat(cur));
-                return acc;
-            },
-            new Map()
-        );
+                    acc.set(cur.rowNumber, items.concat(cur));
+                    return acc;
+                },
+                new Map()
+            );
+
+        return {
+            mapObject: mappedGroups,
+            arrayForm: Array.from(mappedGroups.entries()).sort(
+                ([keyA], [keyB]) => keyA - keyB
+            ),
+        };
     }, [formComponentsState]);
 
     const isBlockedAddingRow = useMemo<boolean>(() => {
-        const items = groupedFormComponentsByRowLevel.get(rowNumber);
+        const items = groupedFormComponentsByRowLevel.mapObject.get(rowNumber);
         return items?.length === 1;
     }, [groupedFormComponentsByRowLevel, rowNumber]);
     return (
@@ -69,7 +78,7 @@ const FormConstructor: FC<Props> = (props) => {
                     disabled={!!isDisabled}
                     wrapperCol={{ span: 8 }}
                 >
-                    {Array.from(groupedFormComponentsByRowLevel.entries()).map(
+                    {groupedFormComponentsByRowLevel.arrayForm.map(
                         ([rowIndex, rowComponents]) => (
                             <FormRow
                                 rowComponents={rowComponents}

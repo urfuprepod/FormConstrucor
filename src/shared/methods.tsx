@@ -5,6 +5,8 @@ import type {
     ObjectSettingsFormType,
     SettingsFieldsStatic,
 } from "./types/constructor";
+import type { Active } from "@dnd-kit/core";
+import type { DraggableType } from "./types/draggable";
 
 export function downloadJson(data: object, filename = "form") {
     const jsonString = JSON.stringify(data, null, 2);
@@ -85,12 +87,69 @@ export const generateLabelName = (): string => {
 export const findActualIndexOnFields = (
     rowNumber: number,
     fields: ComponentConfigWithStateArray,
-    type: "startRow" | "endRow"
+    type: DraggableType,
+    oldPosition?: number
 ) => {
     const filtered = fields.filter((el) => el.rowNumber === rowNumber);
     if (!filtered.length) return fields.length;
+    let preIndex =
+        filtered
+            .sort((a, b) => a.position - b.position)
+            .at(type === "startRow" ? 0 : -1)?.position ?? -1;
 
-    let preIndex = filtered.sort().at(type === "startRow" ? 0 : -1)?.position ?? -1;
-    if (type === 'endRow') preIndex++;
-    return preIndex
+
+    if (!oldPosition) {
+        return type === 'endRow' ? preIndex + 1 : preIndex
+    }
+    
+    if (oldPosition > preIndex) {
+        return type === 'endRow' ? preIndex + 1 : preIndex
+    }
+
+    if (oldPosition < preIndex) {
+        return type === 'endRow' ? preIndex : preIndex - 1
+    }
+
+    return oldPosition
+};
+
+export const checkSideTypeByItemAndCenterPosition = <
+    T extends { active: Active }
+>(
+    item: T,
+    centerDrop: number
+): DraggableType => {
+    const translatedLeft = item.active.rect.current.translated?.left;
+    if (!translatedLeft) return "startRow";
+    return translatedLeft < centerDrop ? "startRow" : "endRow";
+};
+
+
+export const mutatePositionNeighbours = (
+    actualPosition: number,
+    neighbourPosition: number,
+    oldPosition?: number
+) => {
+    if (!oldPosition) {
+        if (neighbourPosition < actualPosition) return neighbourPosition;
+        return neighbourPosition + 1;
+    }
+
+    if (oldPosition < actualPosition) {
+        if (neighbourPosition > actualPosition) return neighbourPosition;
+        if (neighbourPosition < oldPosition) return neighbourPosition;
+        if (
+            neighbourPosition >= oldPosition &&
+            neighbourPosition <= actualPosition
+        )
+            return neighbourPosition - 1;
+    }
+
+    if (oldPosition > actualPosition) {
+        if (neighbourPosition < actualPosition) return neighbourPosition;
+        if (neighbourPosition > oldPosition) return neighbourPosition;
+        return neighbourPosition + 1;
+    }
+
+    return neighbourPosition;
 };

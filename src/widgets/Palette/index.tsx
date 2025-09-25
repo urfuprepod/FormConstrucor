@@ -7,7 +7,7 @@ import { fieldsList } from "@/entities/FormConstructor/config";
 import { useFormConstructor } from "@/app/store/useFormConstructor";
 
 const ComponentPalette: FC = React.memo(() => {
-    const { pushNewField, unshiftNewField } = useFormConstructor();
+    const { pushAndReplaceField, unshiftNewField } = useFormConstructor();
 
     return (
         <Flex vertical gap={12} className={styles.palette}>
@@ -16,7 +16,7 @@ const ComponentPalette: FC = React.memo(() => {
                     key={i}
                     config={cfg as ComponentConfig<typeof cfg.settings>}
                     orderNumber={i}
-                    onPushField={pushNewField}
+                    onPushField={pushAndReplaceField}
                     onUnshiftField={unshiftNewField}
                 />
             ))}

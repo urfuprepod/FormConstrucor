@@ -44,7 +44,7 @@ export function useComponentConfig(
         }
     }, [initialFunction]);
 
-    const pushNewField = useCallback(
+    const pushAndReplaceField = useCallback(
         <T extends SettingsFieldsStatic>(config: ComponentConfig<T>) => {
             const data = {
                 ...getSettingsValues([...config.settings]),
@@ -162,7 +162,7 @@ export function useComponentConfig(
 
     return {
         fields,
-        pushNewField,
+        pushAndReplaceField,
         updateField,
         activeField,
         removeField,

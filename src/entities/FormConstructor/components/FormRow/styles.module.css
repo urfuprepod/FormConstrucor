@@ -1,63 +1,21 @@
 .draggable-container {
     position: relative;
     padding: 20px;
+    transition: transform 0.3s ease;
 
     &.over {
         opacity: 0.7;
     }
+
+    &.left {
+        transform: perspective(1000px) rotateY(-5deg) skewX(-2deg);
+    }
+
+    &.right {
+        transform: perspective(1000px) rotateY(5deg) skewX(2deg);
+    }
 }
 
-.drag-handle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    background: rgba(0, 0, 0, 0.1);
-    cursor: grab;
-    transition: background 0.3s ease;
-}
-
-.drag-handle-left {
-    left: -30px;
-    transform: translateX(100%);
-}
-
-.drag-handle-right {
-    right: -30px;
-    transform: translateX(-100%);
-}
-
-.drag-handle.active {
-    background: rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.draggable-container:hover {
+.draggable-container.over {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.drag-handle-left.active {
-    animation: showLeftHandle 0.3s forwards;
-}
-
-.drag-handle-right.active {
-    animation: showRightHandle 0.3s forwards;
-}
-
-@keyframes showLeftHandle {
-    from {
-        transform: translateX(100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
-
-@keyframes showRightHandle {
-    from {
-        transform: translateX(-100%);
-    }
-    to {
-        transform: translateX(0);
-    }
 }

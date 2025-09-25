@@ -12,6 +12,7 @@ import { MAX_COLUMNS } from "@/shared/constants";
 import { useFormConstructor } from "@/app/store/useFormConstructor";
 import { useDraggable } from "@dnd-kit/core";
 import clsx from "clsx";
+import { CSS } from "@dnd-kit/utilities";
 
 type Props<T extends SettingsFieldsStatic> = {
     buttonsBlock?: React.ReactNode;
@@ -65,25 +66,30 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         );
     }, [formState.columnLength, fieldValues.columnsLength, isPaletteMode]);
 
-    const { setNodeRef, isDragging, attributes, listeners } = useDraggable({
-        id: String(isPaletteMode ? `p-${id}` : id),
-        data: {
-            data: componentConfiguration,
-        },
-    });
+    const { setNodeRef, isDragging, attributes, listeners, transform } =
+        useDraggable({
+            id: String(isPaletteMode ? `p-${id}` : id),
+            data: {
+                data: componentConfiguration,
+            },
+        });
+
+    const draggableStyle = {
+        transform: CSS.Translate.toString(transform),
+    };
 
     return (
         <Col span={actualColumnLength}>
             <ComponentWithButtons
                 className={styles.container}
-                style={style}
+                style={{ ...style, ...draggableStyle }}
                 buttonsBlock={buttonsBlock}
             >
                 <div
                     ref={setNodeRef}
                     {...attributes}
                     {...listeners}
-                    style={{ padding: '5 5 0 5' }}
+                    style={{ padding: "5 5 0 5" }}
                     className={clsx({
                         [styles.draggable]: isDragging,
                     })}

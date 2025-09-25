@@ -8,6 +8,7 @@ import {
     getSettingsValues,
     generateLabelName,
     findActualIndexOnFields,
+    mutatePositionNeighbours,
 } from "@/shared/methods";
 import type {
     Arch,
@@ -17,6 +18,7 @@ import type {
     FieldType,
     SettingsFieldsStatic,
 } from "@/shared/types/constructor";
+import type { DraggableType } from "@/shared/types/draggable";
 import { checkActualValue } from "@/shared/types/formState";
 import { create } from "zustand";
 
@@ -29,10 +31,11 @@ interface IFormConstructorState {
         key: T,
         val: ComponentConfig<SettingsFieldsStatic>["config"][T]
     ) => void;
-    pushNewField: <T extends SettingsFieldsStatic>(
+    pushAndReplaceField: <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>,
         rowNumber?: number,
-        pushedOn?: "startRow" | "endRow"
+        pushedOn?: DraggableType,
+        oldPositionId?: number
     ) => void;
     unshiftNewField: <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>
@@ -53,17 +56,6 @@ interface IFormConstructorState {
     formState: FormState;
     mutate: <K extends FieldType>(key: string, type: K, val: unknown) => void;
 }
-
-const mutatePositionNeighbours = (
-    actualPosition: number,
-    neighbourPosition: number,
-    oldPosition?: number
-) => {
-    if (neighbourPosition < actualPosition) return neighbourPosition;
-    if (oldPosition && neighbourPosition > oldPosition)
-        return neighbourPosition;
-    return neighbourPosition + 1;
-};
 
 export const useFormConstructor = create<IFormConstructorState>((set) => ({
     fields: [],
@@ -102,26 +94,55 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
             };
         });
     },
-    pushNewField: <T extends SettingsFieldsStatic>(
+    pushAndReplaceField: <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>,
         rowNumber?: number,
-        pushedOn?: "startRow" | "endRow",
+        pushedOn?: DraggableType,
         oldPositionId?: number
     ) => {
         const data = {
-            ...getSettingsValues([...config.settings]),
             ...commonPropsToObjectForm,
+            ...getSettingsValues([...config.settings]),
         };
 
-        data.label = generateLabelName();
+        if (!oldPositionId) {
+            data.label = generateLabelName();
+        }
 
         set((state) => {
             const actualPosition =
                 pushedOn && rowNumber
-                    ? findActualIndexOnFields(rowNumber, state.fields, pushedOn)
+                    ? findActualIndexOnFields(rowNumber, state.fields, pushedOn, oldPositionId)
                     : state.fields.length + 1;
 
-            console.log(actualPosition, 'писька сиьска член')
+            const newFieldItem = {
+                ...config,
+                position: actualPosition,
+                rowNumber: rowNumber ?? state.rowNumber + 1,
+                data,
+            } as ComponentConfigWithState<SettingsFieldsStatic>;
+
+            if (oldPositionId) {
+                return {
+                    fields: state.fields.map((el) =>
+                        el.position === oldPositionId
+                            ? {
+                                  ...el,
+                                  position: actualPosition,
+                                  rowNumber: rowNumber ?? state.rowNumber + 1,
+                              }
+                            : {
+                                  ...el,
+                                  position: mutatePositionNeighbours(
+                                      actualPosition,
+                                      el.position,
+                                      oldPositionId
+                                  ),
+                              }
+                    ),
+                };
+            }
+
             return {
                 fields: [
                     ...state.fields.map((el) => ({
@@ -132,12 +153,7 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
                             oldPositionId
                         ),
                     })),
-                    {
-                        ...config,
-                        position: actualPosition,
-                        rowNumber: rowNumber ?? state.rowNumber + 1,
-                        data,
-                    } as ComponentConfigWithState<SettingsFieldsStatic>,
+                    newFieldItem,
                 ],
                 rowNumber: rowNumber ? state.rowNumber : state.rowNumber + 1, // если засунули в какую-то конкретную строку, то номер последней строки не изменился
             };
