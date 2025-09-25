@@ -3,9 +3,10 @@ import { AddButton, DeleteButton, FieldWithButton } from "@/shared/components";
 import type { ComponentConfigWithStateArray } from "@/shared/types/constructor";
 import { Row, type FormInstance } from "antd";
 import { ThumbsUp, Trash2 } from "lucide-react";
-import React, { useState, type FC } from "react";
+import React, { useMemo, useState, type FC } from "react";
 import styles from "./styles.module.css";
 import clsx from "clsx";
+import { useDroppable } from "@dnd-kit/core";
 
 type Props = {
     rowIndex: number;
@@ -27,21 +28,32 @@ const FormRow: FC<Props> = (props) => {
 
     const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
 
+    const { isOver, setNodeRef } = useDroppable({
+        id: `row-${rowIndex}`,
+    });
+
+    const sortedItems = useMemo(() => {
+        return [...rowComponents].sort((a, b) => a.position - b.position);
+    }, [rowComponents]);
+
     return (
         <Row
             key={rowIndex}
             gutter={[formState.gap, formState.gap]}
             align="bottom"
-            className={styles["draggable-container"]}
+            ref={setNodeRef}
+            className={clsx(styles["draggable-container"], {
+                [styles.over]: isOver,
+            })}
         >
-            <div
+            {/* <div
                 className={clsx(styles["drag-handle"], {
                     [styles.active]: !!hoverSide,
                     [styles["drag-handle-left"]]: hoverSide === "left",
                     [styles["drag-handle-right"]]: hoverSide === "right",
                 })}
-            />
-            {rowComponents.map((config) => (
+            /> */}
+            {sortedItems.map((config) => (
                 <FieldWithButton
                     style={{
                         border:

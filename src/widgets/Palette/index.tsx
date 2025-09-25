@@ -15,6 +15,7 @@ const ComponentPalette: FC = React.memo(() => {
                 <PaletteItem
                     key={i}
                     config={cfg as ComponentConfig<typeof cfg.settings>}
+                    orderNumber={i}
                     onPushField={pushNewField}
                     onUnshiftField={unshiftNewField}
                 />

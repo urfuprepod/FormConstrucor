@@ -1,30 +1,41 @@
-import React, { type FC } from "react";
+import React, { useEffect, useState, type FC } from "react";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 import { Typography } from "antd";
-import { useFormConstructor } from "@/app/store/useFormConstructor";
+import { useDroppable } from "@dnd-kit/core";
 
 type Props = {
     isLastRowEmpty: boolean;
 };
 
 const RowCreationBlock: FC<Props> = (props) => {
-    // const { updateFieldLayout, pushNewField } = useFormConstructor();
-
     const { isLastRowEmpty } = props;
 
-    const onAddNewRow = () => {
-        if (!isLastRowEmpty) {
-            // pushNewField()
-        }
-    };
+    const { isOver, setNodeRef } = useDroppable({
+        id: "create",
+    });
+
+    const [isShowed, setIsShowed] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIsShowed(!!isOver);
+    }, [isOver]);
 
     return (
-        <div className={clsx(styles.container, { [styles.active]: false })}>
-            <div className={styles["row-block"]}>
+        <div
+            ref={setNodeRef}
+            className={clsx(styles.container, {
+                [styles.active]: isShowed,
+            })}
+        >
+            <div
+                className={clsx(styles["row-block"], {
+                    [styles.disabled]: isLastRowEmpty,
+                })}
+            >
                 <Typography.Title level={5}>
                     Добавить строку{" "}
-                    {isLastRowEmpty && "(последняя строка и так пустая)"}
+                    {isLastRowEmpty && "(не имеет смысла)"}
                 </Typography.Title>
             </div>
         </div>

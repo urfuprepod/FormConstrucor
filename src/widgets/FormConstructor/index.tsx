@@ -48,7 +48,7 @@ const FormConstructor: FC<Props> = (props) => {
 
     const isBlockedAddingRow = useMemo<boolean>(() => {
         const items = groupedFormComponentsByRowLevel.get(rowNumber);
-        return !items?.length;
+        return items?.length === 1;
     }, [groupedFormComponentsByRowLevel, rowNumber]);
     return (
         <>
@@ -82,7 +82,7 @@ const FormConstructor: FC<Props> = (props) => {
                         )
                     )}
 
-                    <RowCreationBlock isLastRowEmpty={false} />
+                    <RowCreationBlock isLastRowEmpty={isBlockedAddingRow} />
 
                     <FlexInLine gap={8}>
                         {/* <Popover

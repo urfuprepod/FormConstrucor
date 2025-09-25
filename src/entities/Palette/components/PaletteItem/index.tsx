@@ -11,10 +11,11 @@ type Props<T extends SettingsFieldsStatic> = {
     config: ComponentConfig<T>;
     onPushField: (field: ComponentConfig<T>) => void;
     onUnshiftField: (field: ComponentConfig<T>) => void;
+    orderNumber: number;
 };
 
 const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
-    const { config, onPushField, onUnshiftField } = props;
+    const { config, onPushField, onUnshiftField, orderNumber } = props;
 
     return (
         <FieldWithButton
@@ -26,7 +27,7 @@ const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
                     ...getSettingsValues([...config.settings]),
                     ...commonPropsToObjectForm,
                 },
-                position: 0,
+                position: orderNumber,
             }}
             buttonsBlock={
                 <>

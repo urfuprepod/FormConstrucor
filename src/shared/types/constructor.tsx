@@ -115,7 +115,20 @@ export type Arch<T extends SettingsFieldsStatic> = {
     >;
 };
 
-export type ComponentConfig<T extends SettingsFieldsStatic> = {
+export const isComponentConfigWithState = <T extends SettingsFieldsStatic>(
+    val: unknown
+): val is ComponentConfigWithState<T> => {
+    const predicted = val as ComponentConfigWithState<T>;
+    return (
+        "Component" in predicted &&
+        "settings" in predicted &&
+        "name" in predicted
+    );
+};
+
+export type ComponentConfig<
+    T extends SettingsFieldsStatic = SettingsFieldsStatic
+> = {
     Component: React.FC<Arch<T>>;
     settings: T;
     name: string;
@@ -130,10 +143,10 @@ export type ComponentConfig<T extends SettingsFieldsStatic> = {
 
 export type FieldVariant = (typeof fieldVariantsOptions)[number]["value"];
 
-export type ComponentConfigArray = Array<ComponentConfig<SettingsFieldsStatic>>;
+export type ComponentConfigArray = Array<ComponentConfig>;
 
 export type ComponentConfigWithState<T extends SettingsFieldsStatic> =
-    ComponentConfig<T> & { position: number; data: Arch<T>, rowNumber: number };
+    ComponentConfig<T> & { position: number; data: Arch<T>; rowNumber: number };
 
 export type ComponentConfigWithStateArray = Array<
     ComponentConfigWithState<SettingsFieldsStatic>

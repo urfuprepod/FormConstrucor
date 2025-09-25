@@ -10,11 +10,19 @@ import "./main.css";
 import SettingsEditor from "@/widgets/SettingsEditor";
 import { useMemo, useRef } from "react";
 import { useFormConstructor } from "./store/useFormConstructor";
+import { DndContext } from "@dnd-kit/core";
+import { useDraggableControl } from "@/shared/hooks";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);
 
     const [activePositionNumber, setActivePositionNumber] = useActiveField(ref);
+    const {
+        activeDraggableId,
+        handleDragEnd,
+        handleRemoveDraggableId,
+        handleDragStart,
+    } = useDraggableControl();
 
     const { fields } = useFormConstructor();
 
@@ -40,23 +48,31 @@ function App() {
                 },
             }}
         >
-            <Row gutter={16}>
-                <Col span={6}>
-                    <ComponentPalette />
-                </Col>
-                <Col span={12}>
-                    {isLoadingFields && <Spin size="large" />}
-                    <FormConstructor
-                        isDisabled={isLoadingFields}
-                        activePositionNumber={activePositionNumber}
-                        onPickFieldActive={setActivePositionNumber}
-                    />
-                </Col>
+            <DndContext
+                onDragStart={handleDragStart}
+                onDragCancel={handleRemoveDraggableId}
+                onDragEnd={handleDragEnd}
+            >
+                <Row gutter={16}>
+                    <Col span={6}>
+                        <ComponentPalette />
+                    </Col>
+                    <Col span={12}>
+                        {isLoadingFields && <Spin size="large" />}
+                        <FormConstructor
+                            isDisabled={isLoadingFields}
+                            activePositionNumber={activePositionNumber}
+                            onPickFieldActive={setActivePositionNumber}
+                        />
+                    </Col>
 
-                <Col span={6} ref={ref}>
-                    {activeField && <SettingsEditor activeItem={activeField} />}
-                </Col>
-            </Row>
+                    <Col span={6} ref={ref}>
+                        {activeField && (
+                            <SettingsEditor activeItem={activeField} />
+                        )}
+                    </Col>
+                </Row>
+            </DndContext>
         </ConfigProvider>
     );
 }

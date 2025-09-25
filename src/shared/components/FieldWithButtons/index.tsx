@@ -10,6 +10,8 @@ import { Col, type FormInstance } from "antd";
 import HiddenContainer from "../HiddenContainer";
 import { MAX_COLUMNS } from "@/shared/constants";
 import { useFormConstructor } from "@/app/store/useFormConstructor";
+import { useDraggable } from "@dnd-kit/core";
+import clsx from "clsx";
 
 type Props<T extends SettingsFieldsStatic> = {
     buttonsBlock?: React.ReactNode;
@@ -21,13 +23,15 @@ type Props<T extends SettingsFieldsStatic> = {
 };
 
 const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
+    const { componentConfiguration, buttonsBlock, form, isPaletteMode, style } =
+        props;
+
     const {
-        componentConfiguration: { Component, data: fieldValues, config },
-        buttonsBlock,
-        form,
-        isPaletteMode,
-        style,
-    } = props;
+        Component,
+        data: fieldValues,
+        config,
+        position: id,
+    } = componentConfiguration;
 
     const value = config.hide?.field
         ? form?.getFieldValue(config.hide.field)
@@ -61,6 +65,13 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         );
     }, [formState.columnLength, fieldValues.columnsLength, isPaletteMode]);
 
+    const { setNodeRef, isDragging, attributes, listeners } = useDraggable({
+        id: String(isPaletteMode ? `p-${id}` : id),
+        data: {
+            data: componentConfiguration,
+        },
+    });
+
     return (
         <Col span={actualColumnLength}>
             <ComponentWithButtons
@@ -68,12 +79,22 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
                 style={style}
                 buttonsBlock={buttonsBlock}
             >
-                <HiddenContainer isHidden={isHidden}>
-                    <FormFieldFabric
-                        Component={Component}
-                        fieldValues={fieldValues}
-                    />
-                </HiddenContainer>
+                <div
+                    ref={setNodeRef}
+                    {...attributes}
+                    {...listeners}
+                    style={{ padding: '5 5 0 5' }}
+                    className={clsx({
+                        [styles.draggable]: isDragging,
+                    })}
+                >
+                    <HiddenContainer isHidden={isHidden}>
+                        <FormFieldFabric
+                            Component={Component}
+                            fieldValues={fieldValues}
+                        />
+                    </HiddenContainer>
+                </div>
             </ComponentWithButtons>
         </Col>
     );

@@ -7,16 +7,28 @@ import { defineComponent } from "@/shared/methods";
 export { Input, Select };
 
 export const fieldsList = [
-    defineComponent({
+    {
         Component: Input,
         name: InputOption.componentName,
         settings: InputOption.inputSettings,
         config: {},
-    }),
-    defineComponent({
+    },
+    {
         Component: Select,
         settings: SelectOption.selectSettings,
         name: InputOption.componentName,
         config: {},
-    }),
+    },
+    // defineComponent({
+    //     Component: Input,
+    //     name: InputOption.componentName,
+    //     settings: InputOption.inputSettings,
+    //     config: {},
+    // }),
+    // defineComponent({
+    //     Component: Select,
+    //     settings: SelectOption.selectSettings,
+    //     name: InputOption.componentName,
+    //     config: {},
+    // }),
 ];

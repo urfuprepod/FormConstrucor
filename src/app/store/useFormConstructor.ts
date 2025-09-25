@@ -121,6 +121,7 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
                     ? findActualIndexOnFields(rowNumber, state.fields, pushedOn)
                     : state.fields.length + 1;
 
+            console.log(actualPosition, 'писька сиьска член')
             return {
                 fields: [
                     ...state.fields.map((el) => ({

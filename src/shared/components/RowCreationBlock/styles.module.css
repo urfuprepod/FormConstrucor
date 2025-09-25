@@ -1,6 +1,7 @@
 .container.active {
     .row-block {
         visibility: visible;
+        cursor: crosshair;
     }
 }
 
@@ -13,5 +14,10 @@
 
     * {
         margin: 0 !important;
+    }
+
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
     }
 }

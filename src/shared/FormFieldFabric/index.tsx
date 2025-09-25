@@ -4,7 +4,9 @@ import type {
     Arch,
     SettingsFieldsStatic,
 } from "../types/constructor";
-import React, { useRef } from "react";
+import React from "react";
+import styles from "./styles.module.css";
+import clsx from "clsx";
 
 type Props<T extends SettingsFieldsStatic> = {
     Component: ComponentConfig<T>["Component"];
@@ -30,7 +32,7 @@ const FormFieldFabric = <T extends SettingsFieldsStatic>(props: Props<T>) => {
                     message: "Поле обязательно",
                 },
             ]}
-            style={{ marginBottom: 0, flex: "1 1 auto" }}
+            className={clsx(styles["form-item"])}
             wrapperCol={{ span: 24, style: { width: "100%" } }}
         >
             {React.createElement(Component, fieldValues)}
