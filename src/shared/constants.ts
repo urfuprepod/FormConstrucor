@@ -18,7 +18,13 @@ export const formFieldSetting = [
         type: "number",
         defaultValue: 6,
         propertyName: "gap",
-        labelText: "Расстояние между колонками",
+        labelText: "Расстояние между колонками (бп)",
+    },
+    {
+        type: "number",
+        defaultValue: 12,
+        propertyName: "space",
+        labelText: "Расстояние между строками (px)",
     },
     {
         type: "select",

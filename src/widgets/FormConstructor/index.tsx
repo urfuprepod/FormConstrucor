@@ -24,7 +24,7 @@ const FormConstructor: FC<Props> = (props) => {
 
     const { form, updateFormState } = useFormData();
     const [isActiveSettings, setIsActiveSettings] = useState<boolean>(false);
-    const { fields: formComponentsState, rowNumber } = useFormConstructor();
+    const { fields: formComponentsState, rowNumber, formState } = useFormConstructor();
 
     const groupedFormComponentsByRowLevel = useMemo<{
         mapObject: Map<number, ComponentConfigWithStateArray>;
@@ -73,6 +73,7 @@ const FormConstructor: FC<Props> = (props) => {
             <FormStateContext.Provider value={{ updateFormState }}>
                 <Form
                     className={styles.form}
+                    style={{gap: formState.space + 'px'}}
                     layout="vertical"
                     form={form}
                     onClick={(e) => e.stopPropagation()}
