@@ -27,7 +27,7 @@ const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
                     ...getSettingsValues([...config.settings]),
                     ...commonPropsToObjectForm,
                 },
-                position: orderNumber,
+                position: -1 - orderNumber,
             }}
             buttonsBlock={
                 <>

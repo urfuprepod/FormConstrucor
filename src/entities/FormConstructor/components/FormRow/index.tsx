@@ -3,10 +3,10 @@ import { AddButton, DeleteButton, FieldWithButton } from "@/shared/components";
 import type { ComponentConfigWithStateArray } from "@/shared/types/constructor";
 import { Row, type FormInstance } from "antd";
 import { ThumbsUp, Trash2 } from "lucide-react";
-import React, { useEffect, useMemo, useRef, useState, type FC } from "react";
+import { useEffect, useMemo, useRef, useState, type FC } from "react";
 import styles from "./styles.module.css";
 import clsx from "clsx";
-import { useDndMonitor, useDroppable, type DragMoveEvent } from "@dnd-kit/core";
+import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 
 type Props = {
     rowIndex: number;
@@ -14,6 +14,7 @@ type Props = {
     form: FormInstance;
     activePositionNumber: number | null;
     onPickFieldActive: (val: number) => void;
+    activeDraggableId: string | null
 };
 
 const FormRow: FC<Props> = (props) => {
@@ -24,6 +25,7 @@ const FormRow: FC<Props> = (props) => {
         form,
         onPickFieldActive,
         activePositionNumber,
+        activeDraggableId,
     } = props;
 
     const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
@@ -90,7 +92,7 @@ const FormRow: FC<Props> = (props) => {
                 [styles.right]: hoverSide === "right",
             })}
         >
-            {sortedItems.map((config) => (
+            {sortedItems.map((config, id) => (
                 <FieldWithButton
                     style={{
                         border:
@@ -98,8 +100,10 @@ const FormRow: FC<Props> = (props) => {
                                 ? "1px solid red"
                                 : "",
                     }}
+                    isDisabled={id === 0}
                     componentConfiguration={config}
                     form={form}
+                    activeDraggableId={activeDraggableId}
                     key={config.position}
                     buttonsBlock={
                         <>

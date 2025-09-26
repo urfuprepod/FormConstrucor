@@ -10,14 +10,9 @@ import "./main.css";
 import SettingsEditor from "@/widgets/SettingsEditor";
 import { useMemo, useRef } from "react";
 import { useFormConstructor } from "./store/useFormConstructor";
-import {
-    DndContext,
-    MouseSensor,
-    TouchSensor,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useDraggableControl } from "@/shared/hooks";
+import { OverlayItem } from "@/entities/FormConstructor/components";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);
@@ -27,6 +22,8 @@ function App() {
         handleDragEnd,
         handleRemoveDraggableId,
         handleDragStart,
+        sensors,
+        activeDraggableId,
     } = useDraggableControl();
 
     const { fields } = useFormConstructor();
@@ -42,20 +39,6 @@ function App() {
     }, [fields, activePositionNumber]);
 
     const { isLoadingFields } = useComponentConfig(activePositionNumber);
-
-    const sensors = useSensors(
-        useSensor(MouseSensor, {
-            activationConstraint: {
-                distance: 5,
-            },
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 250,
-                tolerance: 5,
-            },
-        })
-    );
 
     return (
         <ConfigProvider
@@ -83,8 +66,13 @@ function App() {
                             isDisabled={isLoadingFields}
                             activePositionNumber={activePositionNumber}
                             onPickFieldActive={setActivePositionNumber}
+                            activeDraggableId={activeDraggableId}
                         />
                     </Col>
+
+                    <DragOverlay adjustScale={false} dropAnimation={null}>
+                        <OverlayItem />
+                    </DragOverlay>
                 </DndContext>
                 <Col span={6} ref={ref}>
                     {activeField && <SettingsEditor activeItem={activeField} />}

@@ -9,6 +9,7 @@ import {
     generateLabelName,
     findActualIndexOnFields,
     mutatePositionNeighbours,
+    findPreIndexOnRowPush,
 } from "@/shared/methods";
 import type {
     Arch,
@@ -35,7 +36,10 @@ interface IFormConstructorState {
         config: ComponentConfig<T>,
         rowNumber?: number,
         pushedOn?: DraggableType,
-        oldPositionId?: number
+        positionData?: {
+            oldPositionId?: number;
+            endPositionId?: number;
+        }
     ) => void;
     unshiftNewField: <T extends SettingsFieldsStatic>(
         config: ComponentConfig<T>
@@ -98,21 +102,28 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
         config: ComponentConfig<T>,
         rowNumber?: number,
         pushedOn?: DraggableType,
-        oldPositionId?: number
+        positionData?: {
+            oldPositionId?: number;
+            endPositionId?: number;
+        }
     ) => {
         const data = {
             ...commonPropsToObjectForm,
             ...getSettingsValues([...config.settings]),
         };
 
-        if (!oldPositionId) {
+        if (!positionData?.oldPositionId) {
             data.label = generateLabelName();
         }
 
         set((state) => {
             const actualPosition =
-                pushedOn && rowNumber
-                    ? findActualIndexOnFields(rowNumber, state.fields, pushedOn, oldPositionId)
+                pushedOn && rowNumber && positionData?.endPositionId
+                    ? findActualIndexOnFields(
+                          positionData?.endPositionId,
+                          pushedOn,
+                          positionData.oldPositionId
+                      )
                     : state.fields.length + 1;
 
             const newFieldItem = {
@@ -122,7 +133,8 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
                 data,
             } as ComponentConfigWithState<SettingsFieldsStatic>;
 
-            if (oldPositionId) {
+            if (positionData?.oldPositionId !== undefined) {
+                const { oldPositionId } = positionData;
                 return {
                     fields: state.fields.map((el) =>
                         el.position === oldPositionId
@@ -150,7 +162,7 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
                         position: mutatePositionNeighbours(
                             actualPosition,
                             el.position,
-                            oldPositionId
+                            undefined
                         ),
                     })),
                     newFieldItem,

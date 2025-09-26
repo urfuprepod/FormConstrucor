@@ -84,33 +84,38 @@ export const generateLabelName = (): string => {
     return [messages[first], messages[second]].join(" ");
 };
 
-export const findActualIndexOnFields = (
+export const findPreIndexOnRowPush = (
     rowNumber: number,
     fields: ComponentConfigWithStateArray,
-    type: DraggableType,
-    oldPosition?: number
-) => {
+    type: DraggableType
+): number => {
     const filtered = fields.filter((el) => el.rowNumber === rowNumber);
     if (!filtered.length) return fields.length;
     let preIndex =
         filtered
             .sort((a, b) => a.position - b.position)
             .at(type === "startRow" ? 0 : -1)?.position ?? -1;
+    return preIndex;
+};
 
-
+export const findActualIndexOnFields = (
+    preIndex: number,
+    type: DraggableType,
+    oldPosition?: number
+) => {
     if (!oldPosition) {
-        return type === 'endRow' ? preIndex + 1 : preIndex
+        return type === "endRow" ? preIndex + 1 : preIndex;
     }
-    
+
     if (oldPosition > preIndex) {
-        return type === 'endRow' ? preIndex + 1 : preIndex
+        return type === "endRow" ? preIndex + 1 : preIndex;
     }
 
     if (oldPosition < preIndex) {
-        return type === 'endRow' ? preIndex : preIndex - 1
+        return type === "endRow" ? preIndex : preIndex - 1;
     }
 
-    return oldPosition
+    return oldPosition;
 };
 
 export const checkSideTypeByItemAndCenterPosition = <
@@ -123,7 +128,6 @@ export const checkSideTypeByItemAndCenterPosition = <
     if (!translatedLeft) return "startRow";
     return translatedLeft < centerDrop ? "startRow" : "endRow";
 };
-
 
 export const mutatePositionNeighbours = (
     actualPosition: number,

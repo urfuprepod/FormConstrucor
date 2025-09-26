@@ -16,10 +16,11 @@ type Props = {
     onPickFieldActive: (positionNumber: number) => void;
     isDisabled?: boolean;
     activePositionNumber: number | null;
+    activeDraggableId: string | null,
 };
 
 const FormConstructor: FC<Props> = (props) => {
-    const { isDisabled, onPickFieldActive, activePositionNumber } = props;
+    const { isDisabled, onPickFieldActive, activePositionNumber, activeDraggableId } = props;
 
     const { form, updateFormState } = useFormData();
     const [isActiveSettings, setIsActiveSettings] = useState<boolean>(false);
@@ -86,6 +87,7 @@ const FormConstructor: FC<Props> = (props) => {
                                 onPickFieldActive={onPickFieldActive}
                                 activePositionNumber={activePositionNumber}
                                 key={rowIndex}
+                                activeDraggableId={activeDraggableId}
                                 rowIndex={rowIndex}
                             />
                         )
