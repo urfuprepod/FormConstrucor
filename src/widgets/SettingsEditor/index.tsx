@@ -46,6 +46,7 @@ const SettingsEditor: FC<Props> = (props) => {
 
     return (
         <Form<Arch<SettingsFieldsStatic>>
+            data-testid="editor"
             onValuesChange={onValuesChange}
             form={form}
             initialValues={{

@@ -36,16 +36,13 @@ describe("Three Blocks Flow", () => {
         expect(addInputButton).toBeInTheDocument();
         expect(addSelectButton).toBeInTheDocument();
 
-        // // 4. Нажимаем на кнопку + у первого элемента
         await user.click(addInputButton);
 
-        // // 5. Проверяем, что клон появился в блоке 2
         await waitFor(() => {
             const formElement = screen.getByTestId("field-1");
             expect(formElement).toBeInTheDocument();
         });
 
-        // // 6. Находим кнопку "ред" у клонированного элемента
         const formElement = screen.getByTestId("field-1");
         const editButton = within(formElement).getByRole("button", {
             name: "edit",
@@ -53,36 +50,25 @@ describe("Three Blocks Flow", () => {
 
         expect(editButton).toBeInTheDocument();
 
-        // // 7. Нажимаем на кнопку "ред"
-        // await user.click(editButton)
+        await user.click(editButton);
 
-        // // 8. Проверяем, что открылся блок 3 с формой редактирования
-        // await waitFor(() => {
-        //   expect(screen.getByTestId('block-3')).toBeInTheDocument()
-        // })
+        await waitFor(() => {
+            expect(screen.getByTestId("editor")).toBeInTheDocument();
+        });
 
-        // // 9. Проверяем, что в блоке 3 отображается правильный элемент
-        // expect(screen.getByText('Редактирование: Элемент 1')).toBeInTheDocument()
+        const borderInput = screen.getByLabelText("Толщина рамки");
+        expect(borderInput).toBeInTheDocument();
 
-        // // 10. Находим поле ввода и меняем значение
-        // const editInput = screen.getByTestId('edit-input')
-        // expect(editInput).toHaveValue('Элемент 1')
+        await user.click(borderInput);
+        await user.clear(borderInput);
+        await user.type(borderInput, "6");
+        await user.tab();
 
-        // // 11. Редактируем текст
-        // await user.clear(editInput)
-        // await user.type(editInput, 'Отредактированный элемент')
+        const blockCheckbox = screen.getByLabelText('Заблокировано');
+        await user.click(blockCheckbox);
 
-        // // 12. Нажимаем кнопку Сохранить
-        // const saveButton = screen.getByTestId('save-btn')
-        // await user.click(saveButton)
-
-        // // 13. Проверяем, что блок 3 закрылся
-        // await waitFor(() => {
-        //   expect(screen.queryByTestId('block-3')).toBeNull()
-        // })
-
-        // // 14. Проверяем, что элемент в блоке 2 обновился
-        // expect(clonedElement).toHaveTextContent('Отредактированный элемент')
-        // expect(clonedElement).not.toHaveTextContent('Элемент 1')
+        const input = formElement.querySelector("input") as HTMLElement;
+        expect(input).toHaveStyle("border-width: 6px")
+        expect(input).toBeDisabled();
     });
 });
