@@ -1,8 +1,8 @@
 import type { BaseButtonProps } from "antd/es/button/button";
 import React, { type FC } from "react";
-import { Button as BaseButton,} from "antd";
+import { Button as BaseButton } from "antd";
 import { partialProps } from "@/shared/methods";
-import style from './styles.module.css'
+import style from "./styles.module.css";
 
 const Button: FC<
     BaseButtonProps & {
@@ -10,12 +10,22 @@ const Button: FC<
         primaryColor?: string;
         onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
         icon?: React.ReactNode;
+        ariaLabel?: string;
     }
 > = (props) => {
-    const { primaryColor = "#52c41a", icon, children, styles, ...rest } = props;
+    const {
+        primaryColor = "#52c41a",
+        ariaLabel,
+        icon,
+        children,
+        styles,
+        ...rest
+    } = props;
     return (
         <BaseButton
             type="text"
+            role="button"
+            aria-label={ariaLabel}
             shape="circle"
             className={style.button}
             style={{ ...styles, backgroundColor: primaryColor }}

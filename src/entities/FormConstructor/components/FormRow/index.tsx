@@ -121,6 +121,7 @@ const FormRow: FC<Props> = (props) => {
                                 onClick={() => {
                                     onPickFieldActive(config.position);
                                 }}
+                                ariaLabel="edit"
                                 icon={
                                     <ThumbsUp
                                         size={16}

@@ -32,6 +32,7 @@ const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
             buttonsBlock={
                 <>
                     <AddButton
+                        ariaLabel="push"
                         onClick={() => onPushField(config)}
                         icon={
                             <Plus size={16} color="#ffffff" strokeWidth={1} />

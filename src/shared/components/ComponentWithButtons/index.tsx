@@ -7,12 +7,12 @@ type Props = {
     style?: React.CSSProperties;
     className?: string;
     ref?: React.RefObject<HTMLDivElement | null>;
-};
+} & React.HTMLAttributes<HTMLDivElement>
 
 const ComponentWithButton = (props: PropsWithChildren<Props>) => {
-    const { buttonsBlock, className, children, style, ref } = props;
+    const { buttonsBlock, className, children, style, ref, ...rest } = props;
     return (
-        <Flex gap={7} align="end" className={className} ref={ref} style={style}>
+        <Flex gap={7} align="end" className={className} ref={ref} {...rest} style={style}>
             <div className={styles.container}>{children}</div>
             {buttonsBlock}
         </Flex>

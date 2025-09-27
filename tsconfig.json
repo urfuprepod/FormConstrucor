@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"]

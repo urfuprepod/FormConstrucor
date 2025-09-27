@@ -20,7 +20,7 @@ type Props<T extends SettingsFieldsStatic> = {
     componentConfiguration: ComponentConfigWithState<T>;
     isPaletteMode?: boolean;
     isDisabled?: boolean;
-    activeDraggableId: string | null;
+    activeDraggableId?: string | null;
 };
 
 const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
@@ -47,6 +47,8 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         : null;
 
     const fieldId = `field-${id}`;
+
+    const identificator = String(isPaletteMode ? `p-${id}` : fieldId);
 
     const isHidden = useMemo(() => {
         if (!config.hide) return false;
@@ -76,13 +78,14 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         );
     }, [formState.columnLength, fieldValues.columnsLength, isPaletteMode]);
 
+    
     const {
         setNodeRef: setDraggableRef,
         isDragging,
         attributes,
         listeners,
     } = useDraggable({
-        id: String(isPaletteMode ? `p-${id}` : fieldId),
+        id: identificator,
         data: {
             data: componentConfiguration,
         },
@@ -106,6 +109,8 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
             <ComponentWithButtons
                 className={styles.container}
                 style={{ ...style }}
+                data-id={identificator}
+                data-testid={identificator}
                 buttonsBlock={buttonsBlock}
             >
                 <div
