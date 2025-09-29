@@ -53,3 +53,7 @@ export const typeMap: Record<FieldType, (val: unknown) => boolean> = {
     input: (v) => typeof v === "string",
     select: (v) => typeof v === "string",
 };
+
+// text data
+
+export const rowCreationLabelText = `Добавить строку`;

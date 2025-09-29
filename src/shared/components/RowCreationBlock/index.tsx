@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import clsx from "clsx";
 import { Typography } from "antd";
 import { useDroppable } from "@dnd-kit/core";
+import { rowCreationLabelText } from "@/shared/constants";
 
 type Props = {
     isLastRowEmpty: boolean;
@@ -27,14 +28,16 @@ const RowCreationBlock: FC<Props> = (props) => {
             className={clsx(styles.container, {
                 [styles.active]: isShowed,
             })}
+            data-testid="container"
         >
             <div
+                data-testid="creation"
                 className={clsx(styles["row-block"], {
                     [styles.disabled]: isLastRowEmpty,
                 })}
             >
                 <Typography.Title level={5}>
-                    Добавить строку{" "}
+                    {rowCreationLabelText}{" "}
                     {isLastRowEmpty && "(не имеет смысла)"}
                 </Typography.Title>
             </div>

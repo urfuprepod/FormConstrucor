@@ -109,6 +109,7 @@ const FormRow: FC<Props> = (props) => {
                         <>
                             <DeleteButton
                                 onClick={() => removeField(config.position)}
+                                ariaLabel="delete"
                                 icon={
                                     <Trash2
                                         size={16}
