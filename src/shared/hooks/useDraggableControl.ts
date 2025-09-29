@@ -61,8 +61,14 @@ export const useDraggableControl = () => {
 
     const callbackDict = useMemo<DraggableCallbackDictionary>(() => {
         return {
-            create: (data: ComponentConfigWithState<SettingsFieldsStatic>) =>
-                pushAndReplaceField(data),
+            create: (
+                data: ComponentConfigWithState<SettingsFieldsStatic>,
+                over?: Over,
+                oldPosition?: number
+            ) =>
+                pushAndReplaceField(data, undefined, "startRow", {
+                    oldPositionId: oldPosition,
+                }),
             row: (
                 data: ComponentConfigWithState<SettingsFieldsStatic>,
                 over?: Over,
@@ -78,7 +84,7 @@ export const useDraggableControl = () => {
                     data,
                     rowNumber,
                     drt,
-                    oldPosition === undefined || oldPosition < 0
+                    oldPosition === undefined
                         ? undefined
                         : {
                               oldPositionId: oldPosition,
@@ -131,7 +137,9 @@ export const useDraggableControl = () => {
             )?.[1](
                 data.current.data,
                 event.over,
-                data.current.data.position,
+                data.current.data.position > 0
+                    ? data.current.data.position
+                    : undefined,
                 variant
             );
         }

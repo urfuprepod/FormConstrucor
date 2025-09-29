@@ -124,8 +124,11 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
                           pushedOn,
                           positionData.oldPositionId
                       )
+                    : positionData?.oldPositionId
+                    ? state.fields.length
                     : state.fields.length + 1;
 
+             console.log(actualPosition, positionData?.oldPositionId)
             const newFieldItem = {
                 ...config,
                 position: actualPosition,
