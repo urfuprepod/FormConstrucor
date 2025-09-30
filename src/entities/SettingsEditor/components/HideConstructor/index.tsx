@@ -1,5 +1,5 @@
 import { FlexInLine, HiddenContainer } from "@/shared/components";
-import { fieldVariantsOptions } from "@/shared/constants";
+import { fieldVariantsOptions, GAP_VALUE } from "@/shared/constants";
 import type {
     ComponentConfig,
     ComponentConfigWithStateArray,
@@ -56,10 +56,10 @@ const HideConstructor: FC<Props> = (props) => {
     };
 
     return (
-        <Flex vertical gap={12}>
+        <Flex vertical gap={GAP_VALUE.BIG_VERTICAL}>
             <Typography.Title level={5}>Скрыть, если</Typography.Title>
 
-            <FlexInLine gap={8}>
+            <FlexInLine gap={GAP_VALUE.BIG_HORIZONTAL}>
                 <Select<string>
                     options={parsedOptionsFromFields}
                     placeholder="Выберите поле"

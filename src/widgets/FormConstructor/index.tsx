@@ -1,30 +1,44 @@
 import { Button, Form } from "antd";
-import { useMemo, useState, type FC } from "react";
+import { useMemo, type FC } from "react";
 import { downloadJson } from "@/shared/methods";
 import { FlexInLine, RowCreationBlock } from "@/shared/components";
 import styles from "./styles.module.css";
 import type { ComponentConfigWithStateArray } from "@/shared/types/constructor";
 import {
     FormRow,
-    MainFormSettings,
+    ModeConstructorBlock,
 } from "@/entities/FormConstructor/components";
 import { FormStateContext } from "@/entities/FormConstructor/context/formStateContext";
 import { useFormData } from "@/entities/FormConstructor/hooks";
 import { useFormConstructor } from "@/app/store/useFormConstructor";
+import clsx from "clsx";
 
 type Props = {
     onPickFieldActive: (positionNumber: number) => void;
     isDisabled?: boolean;
     activePositionNumber: number | null;
-    activeDraggableId: string | null,
+    activeDraggableId: string | null;
+    isEditMode: boolean;
+    toggleEditMode: (val: boolean) => void;
 };
 
 const FormConstructor: FC<Props> = (props) => {
-    const { isDisabled, onPickFieldActive, activePositionNumber, activeDraggableId } = props;
+    const {
+        isDisabled,
+        onPickFieldActive,
+        activePositionNumber,
+        activeDraggableId,
+        isEditMode,
+        toggleEditMode,
+    } = props;
 
     const { form, updateFormState } = useFormData();
-    const [isActiveSettings, setIsActiveSettings] = useState<boolean>(false);
-    const { fields: formComponentsState, rowNumber, formState } = useFormConstructor();
+
+    const {
+        fields: formComponentsState,
+        rowNumber,
+        formState,
+    } = useFormConstructor();
 
     const groupedFormComponentsByRowLevel = useMemo<{
         mapObject: Map<number, ComponentConfigWithStateArray>;
@@ -62,57 +76,40 @@ const FormConstructor: FC<Props> = (props) => {
     }, [groupedFormComponentsByRowLevel, rowNumber]);
     return (
         <>
-            <Button
-                color="primary"
-                variant={isActiveSettings ? "outlined" : "solid"}
-                onClick={() => setIsActiveSettings((prev) => !prev)}
-            >
-                Настройки формы
-            </Button>
-            <MainFormSettings isActive={isActiveSettings} />
+            <ModeConstructorBlock
+                isEditMode={isEditMode}
+                toggleEditMode={toggleEditMode}
+            />
+
             <FormStateContext.Provider value={{ updateFormState }}>
                 <Form
                     className={styles.form}
-                    style={{gap: formState.space + 'px'}}
+                    style={{ gap: formState.space + "px" }}
                     layout="vertical"
                     form={form}
                     onClick={(e) => e.stopPropagation()}
                     disabled={!!isDisabled}
                     wrapperCol={{ span: 8 }}
                 >
-                    {groupedFormComponentsByRowLevel.arrayForm.map(
-                        ([rowIndex, rowComponents]) => (
-                            <FormRow
-                                rowComponents={rowComponents}
-                                form={form}
-                                onPickFieldActive={onPickFieldActive}
-                                activePositionNumber={activePositionNumber}
-                                key={rowIndex}
-                                activeDraggableId={activeDraggableId}
-                                rowIndex={rowIndex}
-                            />
-                        )
-                    )}
+                    <div className={clsx({ [styles.container]: isEditMode })}>
+                        {groupedFormComponentsByRowLevel.arrayForm.map(
+                            ([rowIndex, rowComponents]) => (
+                                <FormRow
+                                    rowComponents={rowComponents}
+                                    form={form}
+                                    onPickFieldActive={onPickFieldActive}
+                                    activePositionNumber={activePositionNumber}
+                                    key={rowIndex}
+                                    activeDraggableId={activeDraggableId}
+                                    rowIndex={rowIndex}
+                                />
+                            )
+                        )}
 
-                    <RowCreationBlock isLastRowEmpty={isBlockedAddingRow} />
+                        <RowCreationBlock isLastRowEmpty={isBlockedAddingRow} />
+                    </div>
 
                     <FlexInLine gap={8}>
-                        {/* <Popover
-                            content={
-                                isBlockedAddingRow
-                                    ? "Последняя строка и так пустая"
-                                    : undefined
-                            }
-                        >
-                            <Button
-                                disabled={isBlockedAddingRow}
-                                onClick={increaseRowNumber}
-                                type="primary"
-                            >
-                                Добавить строку
-                            </Button>
-                        </Popover> */}
-
                         <Button
                             onClick={() =>
                                 downloadJson({ fields: formComponentsState })

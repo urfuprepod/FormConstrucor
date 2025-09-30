@@ -1,6 +1,7 @@
 import type { EditingFieldProps } from "@/entities/SettingsEditor/types";
 import { DeleteButton, FlexInLine } from "@/shared/components";
 import ComponentWithButtons from "@/shared/components/ComponentWithButtons";
+import { GAP_VALUE } from "@/shared/constants";
 import { useInput } from "@/shared/hooks";
 import type { IOption } from "@/shared/types/selelct";
 import { Button, Flex, Input, Typography } from "antd";
@@ -40,9 +41,9 @@ const SelectOptionCreator: FC<Props> = (props) => {
     };
 
     return (
-        <Flex vertical gap={12}>
-            <Flex vertical gap={6} justify="flex-end">
-                <FlexInLine gap={10}>
+        <Flex vertical gap={GAP_VALUE.BIG_VERTICAL}>
+            <Flex vertical gap={GAP_VALUE.MIN_VERTICAL} justify="flex-end">
+                <FlexInLine gap={GAP_VALUE.BIG_HORIZONTAL}>
                     <Input
                         placeholder={"Имя поля"}
                         value={labelData}
@@ -55,7 +56,11 @@ const SelectOptionCreator: FC<Props> = (props) => {
                     />
                 </FlexInLine>
 
-                <Flex justify="space-between" gap={6} align="center">
+                <Flex
+                    justify="space-between"
+                    gap={GAP_VALUE.MIN_HORIZONTAL}
+                    align="center"
+                >
                     {!!maxLength &&
                         !!value &&
                         value.length >= maxLength &&

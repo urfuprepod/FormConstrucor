@@ -10,7 +10,6 @@ import userEvent from "@testing-library/user-event";
 
 // Твои компоненты
 import App from "./App";
-import { getElementCenter } from "@/shared/methods";
 
 describe("Добавление и удаление элемента формы", () => {
     let user: ReturnType<typeof userEvent.setup>;

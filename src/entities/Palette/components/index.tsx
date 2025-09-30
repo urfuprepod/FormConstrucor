@@ -1,2 +1,4 @@
 import PaletteItem from "./PaletteItem";
-export { PaletteItem };
+import EditingItemsSection from "./EditingItemsSection";
+
+export { PaletteItem, EditingItemsSection };

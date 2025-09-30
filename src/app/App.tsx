@@ -1,23 +1,20 @@
 import "@ant-design/v5-patch-for-react-19";
-import {
-    useActiveField,
-    useComponentConfig,
-} from "../entities/FormConstructor/hooks";
+import { useActiveField } from "../entities/FormConstructor/hooks";
 import { Col, ConfigProvider, Row, Spin } from "antd";
-import ComponentPalette from "@/widgets/Palette";
-import FormConstructor from "@/widgets/FormConstructor";
 import "./main.css";
-import SettingsEditor from "@/widgets/SettingsEditor";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useFormConstructor } from "./store/useFormConstructor";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useDraggableControl } from "@/shared/hooks";
 import { OverlayItem } from "@/entities/FormConstructor/components";
+import { FormConstructor, SettingsEditor, ComponentPalette } from "@/widgets";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);
 
     const [activePositionNumber, setActivePositionNumber] = useActiveField(ref);
+    const [isEditMode, setIsEditMode] = useState<boolean>(false);
+
     const {
         handleDragEnd,
         handleRemoveDraggableId,
@@ -38,8 +35,6 @@ function App() {
         return result;
     }, [fields, activePositionNumber]);
 
-    const { isLoadingFields } = useComponentConfig(activePositionNumber);
-
     return (
         <ConfigProvider
             theme={{
@@ -58,12 +53,14 @@ function App() {
                     onDragEnd={handleDragEnd}
                 >
                     <Col span={6}>
-                        <ComponentPalette />
+                        <ComponentPalette isEditMode={isEditMode} />
                     </Col>
                     <Col span={12}>
-                        {isLoadingFields && <Spin size="large" />}
+                        {false && <Spin size="large" />}
                         <FormConstructor
-                            isDisabled={isLoadingFields}
+                            isDisabled={false}
+                            isEditMode={isEditMode}
+                            toggleEditMode={setIsEditMode}
                             activePositionNumber={activePositionNumber}
                             onPickFieldActive={setActivePositionNumber}
                             activeDraggableId={activeDraggableId}

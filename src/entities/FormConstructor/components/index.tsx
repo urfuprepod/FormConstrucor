@@ -1,5 +1,6 @@
 import MainFormSettings from "./MainFormSettings";
 import FormRow from "./FormRow";
 import OverlayItem from "./OverlayItem";
+import ModeConstructorBlock from "./ModeConstructorBlock";
 
-export {MainFormSettings, OverlayItem, FormRow}
+export {MainFormSettings, ModeConstructorBlock, OverlayItem, FormRow}

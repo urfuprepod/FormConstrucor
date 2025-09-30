@@ -132,9 +132,13 @@ export const useDraggableControl = () => {
         const variant = checkSideTypeByItemAndCenterPosition(event, centerDrop);
 
         if (isComponentConfigWithState(data.current?.data)) {
-            Object.entries(callbackDict).find(([key]) =>
+            const config = Object.entries(callbackDict).find(([key]) =>
                 overId.includes(key)
-            )?.[1](
+            );
+            if (!config) return;
+            const [_, callback] = config;
+
+            callback(
                 data.current.data,
                 event.over,
                 data.current.data.position > 0

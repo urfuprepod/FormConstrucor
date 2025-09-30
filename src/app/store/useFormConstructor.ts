@@ -9,7 +9,6 @@ import {
     generateLabelName,
     findActualIndexOnFields,
     mutatePositionNeighbours,
-    findPreIndexOnRowPush,
 } from "@/shared/methods";
 import type {
     Arch,
@@ -59,11 +58,16 @@ interface IFormConstructorState {
     rowNumber: number;
     formState: FormState;
     mutate: <K extends FieldType>(key: string, type: K, val: unknown) => void;
+
+    cols: IConstructorColumn[],
+    grids: IConstructorGrid[],
 }
 
 export const useFormConstructor = create<IFormConstructorState>((set) => ({
     fields: [],
     rowNumber: 0,
+    cols: [],
+    grids: [{colNumber: null, id: 'sex'}],
     updateConfig: <
         T extends keyof ComponentConfig<SettingsFieldsStatic>["config"]
     >(

@@ -54,6 +54,15 @@ export const typeMap: Record<FieldType, (val: unknown) => boolean> = {
     select: (v) => typeof v === "string",
 };
 
+// number constant
+
+export enum GAP_VALUE {
+    MIN_VERTICAL = 6,
+    BIG_VERTICAL = 12,
+    MIN_HORIZONTAL = 8,
+    BIG_HORIZONTAL = 10
+}
+
 // text data
 
 export const rowCreationLabelText = `Добавить строку`;

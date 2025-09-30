@@ -7,10 +7,12 @@ import HiddenContainer from "./HiddenContainer";
 import ComponentWithLabel from "./ComponentWithLabel";
 import RowCreationBlock from "./RowCreationBlock";
 import SettingField from "./SettingField";
+import Toggler from "./Toggler";
 
 export {
     AddButton,
     FlexInLine,
+    Toggler,
     SettingField,
     HiddenContainer,
     ComponentWithLabel,
