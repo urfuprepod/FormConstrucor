@@ -18,14 +18,9 @@ import type {
     FieldType,
     SettingsFieldsStatic,
 } from "@/shared/types/constructor";
-import type { DraggableType } from "@/shared/types/draggable";
+import type { DraggableItem, DraggableType } from "@/shared/types/draggable";
 import { checkActualValue } from "@/shared/types/formState";
 import { create } from "zustand";
-
-type DraggableItem = {
-    type: null | "field" | "grid" | "col";
-    id: null | string;
-};
 
 interface IFormConstructorState {
     fields: ComponentConfigWithStateArray;

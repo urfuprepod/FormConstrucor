@@ -7,7 +7,6 @@ import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useDraggableControl } from "@/shared/hooks";
 import { OverlayItem } from "@/entities/FormConstructor/components";
 import { FormConstructor, SettingsEditor, ComponentPalette } from "@/widgets";
-import OrderContainer from "@/entities/Palette/components/OrderContainer";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);

@@ -60,7 +60,8 @@ export enum GAP_VALUE {
     MIN_VERTICAL = 6,
     BIG_VERTICAL = 12,
     MIN_HORIZONTAL = 8,
-    BIG_HORIZONTAL = 10
+    BIG_HORIZONTAL = 10,
+    GIANT_VERTICAL = 20
 }
 
 // text data

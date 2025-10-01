@@ -5,18 +5,20 @@ import clsx from "clsx";
 type Props = {
     isLast?: boolean;
     isFirst?: boolean;
+    animationClass: string;
+    onMove: (direction: 'up' | 'down') => void
 };
 
 const OrderContainer: FC<PropsWithChildren<Props>> = (props) => {
-    const { isFirst, isLast, children } = props;
+    const { isFirst, isLast, animationClass, onMove, children } = props;
 
     return (
-        <div className={styles["container-item"]}>
+        <div className={clsx(styles["container-item"], animationClass)}>
             {children}
             <div className={styles["container-actions"]}>
                 <button
                     className={clsx(styles["arrow-btn"], styles["up-btn"])}
-                    // onClick={() => canMoveUp && onMove(container.id, 'up')}
+                    onClick={() => onMove('up')}
                     aria-label="Переместить вверх"
                     disabled={isFirst}
                 >
@@ -32,7 +34,7 @@ const OrderContainer: FC<PropsWithChildren<Props>> = (props) => {
 
                 <button
                     className={clsx(styles["arrow-btn"], styles["down-btn"])}
-                    // onClick={() => canMoveDown && onMove(container.id, 'down')}
+                    onClick={() => onMove('down')}
                     aria-label="Переместить вниз"
                     disabled={isLast}
                 >

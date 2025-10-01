@@ -1,10 +1,39 @@
-.container { 
+.container {
     display: flex;
     flex-direction: column;
     background: #f0f4fd;
     transition: all 0.2s ease;
+    position: relative;
+
+    .plus {
+        top: 10%;
+        bottom: 10%;
+        width: 50%;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+
+        svg {
+            height: 100%;
+            width: 100%;
+        }
+    }
 
     &.active {
         background: #e8effe;
-    }   
+
+        .plus {
+            opacity: 0.7;
+            @starting-style {
+                opacity: 0;
+            }
+        }
+    }
+
+    &.first {
+        flex: 1 1 auto;
+        border-radius: 5px;
+    }
 }

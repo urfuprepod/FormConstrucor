@@ -18,7 +18,7 @@ import {
     checkSideTypeByItemAndCenterPosition,
     findPreIndexOnRowPush,
 } from "../methods";
-import type { DraggableType } from "../types/draggable";
+import { isDraggableItem, type DraggableType } from "../types/draggable";
 
 type DraggableCallbackDictionary = Record<
     string,
@@ -31,18 +31,26 @@ type DraggableCallbackDictionary = Record<
 >;
 
 export const useDraggableControl = () => {
-    const [activeDraggableId, setActiveDraggableId] = useState<string | null>(
-        null
-    );
-
-    const { pushAndReplaceField, fields } = useFormConstructor();
+    const {
+        pushAndReplaceField,
+        updateDraggableItem,
+        fields,
+    } = useFormConstructor();
 
     const handleDragStart = (event: DragStartEvent): void => {
-        setActiveDraggableId(event.active.id as string);
+        const [activeType, activeId] = (event.active.id as string).split("-");
+        updateDraggableItem(
+            isDraggableItem(activeType)
+                ? { type: activeType, id: activeId || null }
+                : { type: null, id: null }
+        );
     };
 
     const handleRemoveDraggableId = () => {
-        setActiveDraggableId(null);
+        updateDraggableItem({
+            type: null,
+            id: null,
+        });
     };
 
     const sensors = useSensors(
@@ -152,7 +160,6 @@ export const useDraggableControl = () => {
     return {
         handleDragEnd,
         handleDragStart,
-        activeDraggableId,
         handleRemoveDraggableId,
         sensors,
     };

@@ -1,45 +1,34 @@
-import { HiddenContainer } from "@/shared/components";
+import { DisabledSpace } from "@/shared/components";
 import { GAP_VALUE } from "@/shared/constants";
-import { useDraggable } from "@dnd-kit/core";
 import { Flex } from "antd";
 import { type FC } from "react";
+import EditingItem from "./EditingItem";
+import styles from "./styles.module.css";
 
 type Props = {
     isEditingMode: boolean;
 };
 
+const ids = [
+    { id: "col", title: "Добавить колонку" },
+    { id: "grid", title: "Добавить сетку" },
+];
+
 const EditingItems: FC<Props> = (props) => {
     const { isEditingMode } = props;
 
-    const {
-        setNodeRef: setGridRef,
-        isDragging: isGridDragging,
-        attributes: gridAttributes,
-        listeners: gridListeners,
-    } = useDraggable({
-        id: "grid",
-    });
-
-    const {
-        setNodeRef: setColRef,
-        isDragging: isColDragging,
-        attributes: colAttributes,
-        listeners: colListeners,
-    } = useDraggable({
-        id: "grid",
-    });
-
     return (
-        <HiddenContainer isHidden={!isEditingMode}>
-            <Flex vertical gap={GAP_VALUE.BIG_VERTICAL}>
-                <div {...gridAttributes} {...gridListeners} ref={setGridRef}>
-                    Добавить сетку
-                </div>
-                <div {...colAttributes} {...colListeners} ref={setColRef}>
-                    Добавить колонку
-                </div>
-            </Flex>
-        </HiddenContainer>
+        <div className={styles.container}>
+            <DisabledSpace isActive={!isEditingMode} zIndex={30}>
+                <Flex vertical gap={GAP_VALUE.GIANT_VERTICAL}>
+                    {ids.map(({ id, title }) => (
+                        <EditingItem id={id} key={id}>
+                            {title}
+                        </EditingItem>
+                    ))}
+                </Flex>
+            </DisabledSpace>
+        </div>
     );
 };
 

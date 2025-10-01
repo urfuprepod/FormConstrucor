@@ -8,6 +8,7 @@ import ComponentWithLabel from "./ComponentWithLabel";
 import RowCreationBlock from "./RowCreationBlock";
 import SettingField from "./SettingField";
 import Toggler from "./Toggler";
+import DisabledSpace from "./DisabledSpace";
 
 export {
     AddButton,
@@ -21,4 +22,5 @@ export {
     ColorPickerSetting,
     ComponentWithButton,
     DeleteButton,
+    DisabledSpace
 };
