@@ -45,7 +45,7 @@ const FormGrid: FC<Props> = (props) => {
         <div
             className={clsx(styles.container, {
                 [styles.active]: isOver,
-                [styles.first]: grid.colNumber === null,
+                [styles.first]: grid.colId === null,
             })}
             ref={setNodeRef}
         >

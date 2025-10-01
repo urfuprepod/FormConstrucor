@@ -39,7 +39,6 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         data: fieldValues,
         config,
         position: id,
-        rowNumber,
     } = componentConfiguration;
 
     const value = config.hide?.field
@@ -95,7 +94,6 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         id: fieldId,
         disabled: isDisabled || isPaletteMode,
         data: {
-            rowNumber,
         },
     });
 

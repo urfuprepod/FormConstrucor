@@ -158,12 +158,43 @@ export const mutatePositionNeighbours = (
     return neighbourPosition;
 };
 
-
 export const getElementCenter = (element: HTMLElement) => {
-  const rect = element.getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
 
-  return {
-    x: rect.left + rect.width / 2,
-    y: rect.top + rect.height / 2,
-  };
+    return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+    };
+};
+
+type Edited<T> = {
+    currentId: string;
+    itemData: Partial<T>;
+};
+
+export const editAddItemToArrayWithIdConstructor = <
+    T extends { id: string } & Record<string, any>
+>(
+    items: T[],
+    config:
+        | {
+              itemData: T;
+          }
+        | Edited<T>
+): T[] => {
+    if (!(config as Edited<T>).currentId) {
+        return items.concat(
+            (
+                config as {
+                    itemData: T;
+                }
+            ).itemData
+        );
+    }
+
+    const predictedConfig = config as Edited<T>;
+
+    return items.map((el) =>
+        el.id === predictedConfig.currentId ? { ...el, ...config.itemData } : el
+    );
 };

@@ -6,9 +6,7 @@ import {
     useSensors,
     type DragEndEvent,
     type DragStartEvent,
-    type Over,
 } from "@dnd-kit/core";
-import { useMemo, useState } from "react";
 import {
     isComponentConfigWithState,
     type ComponentConfigWithState,
@@ -18,23 +16,19 @@ import {
     checkSideTypeByItemAndCenterPosition,
     findPreIndexOnRowPush,
 } from "../methods";
-import { isDraggableItem, type DraggableType } from "../types/draggable";
-
-type DraggableCallbackDictionary = Record<
-    string,
-    (
-        data: ComponentConfigWithState<SettingsFieldsStatic>,
-        over?: Over,
-        oldPosition?: number,
-        direction?: DraggableType
-    ) => void
->;
+import {
+    isDraggableItem,
+    isValidToUpdateCol,
+    type DraggableType,
+} from "../types/draggable";
 
 export const useDraggableControl = () => {
     const {
         pushAndReplaceField,
         updateDraggableItem,
         fields,
+        updateCol,
+        updateGrid,
     } = useFormConstructor();
 
     const handleDragStart = (event: DragStartEvent): void => {
@@ -46,7 +40,7 @@ export const useDraggableControl = () => {
         );
     };
 
-    const handleRemoveDraggableId = () => {
+    const handleRemoveDraggableItem = () => {
         updateDraggableItem({
             type: null,
             id: null,
@@ -67,100 +61,72 @@ export const useDraggableControl = () => {
         })
     );
 
-    const callbackDict = useMemo<DraggableCallbackDictionary>(() => {
-        return {
-            create: (
-                data: ComponentConfigWithState<SettingsFieldsStatic>,
-                over?: Over,
-                oldPosition?: number
-            ) =>
-                pushAndReplaceField(data, undefined, "startRow", {
-                    oldPositionId: oldPosition,
-                }),
-            row: (
-                data: ComponentConfigWithState<SettingsFieldsStatic>,
-                over?: Over,
-                oldPosition?: number,
-                direction?: DraggableType
-            ) => {
-                if (!over?.id) return;
+    const handleGridDrop = (event: DragEndEvent): void => {
+        const { data, id } = event.active;
+        const identificator = event.over?.id;
+        if (typeof id !== "string" || typeof identificator !== "string") return;
+        // сценарий добавления новой колонки
+        const gridId = identificator.split("-").at(-1);
+        if (id === "col") {
+            return updateCol({ gridId });
+        }
+        const currentColId = id.split("-").at(-1);
+        // сценарий мутации старой колонки
+        if (isValidToUpdateCol(data)) {
+            updateCol(data, currentColId);
+        }
+    };
 
-                const rowNumber = +(String(over.id).split("-").at(-1) ?? 0);
-                const drt = direction ?? "endRow";
+    const handleColOnColRefresh = (event: DragEndEvent): void => {
+        const { data, id } = event.active;
+        const identificator = event.over?.id;
+        if (typeof id !== "string" || typeof identificator !== "string") return;
+    };
 
-                pushAndReplaceField(
-                    data,
-                    rowNumber,
-                    drt,
-                    oldPosition === undefined
-                        ? undefined
-                        : {
-                              oldPositionId: oldPosition,
-                              endPositionId: findPreIndexOnRowPush(
-                                  rowNumber,
-                                  fields,
-                                  drt
-                              ),
-                          }
-                );
-            },
-            field: (
-                data: ComponentConfigWithState<SettingsFieldsStatic>,
-                over?: Over,
-                oldPosition?: number
-            ) => {
-                if (!over?.data.current || !("rowNumber" in over.data.current))
-                    return;
+    const handleColumnDrop = (event: DragEndEvent): void => {
+        const { data, id } = event.active;
+        const identificator = event.over?.id;
+        if (typeof id !== "string" || typeof identificator !== "string") return;
+        const columnId = identificator.split("-").at(-1);
+        if (!columnId) return;
 
-                const { rowNumber } = over.data.current;
-                if (typeof rowNumber !== "number") return;
-
-                const endPositionId = +(String(over.id).split("-").at(-1) ?? 0);
-
-                pushAndReplaceField(data, rowNumber, "startRow", {
-                    oldPositionId:
-                        oldPosition === undefined || oldPosition < 0
-                            ? undefined
-                            : oldPosition,
-                    endPositionId,
-                });
-            },
-        };
-    }, [pushAndReplaceField, fields]);
+        // добавляем сетку в колонку
+        if (id === "grid") {
+            return updateGrid({
+                id: new Date().toISOString(),
+                colId: columnId,
+            });
+        }
+        if (!isComponentConfigWithState(data.current?.data)) return;
+        const value = data.current.data;
+        pushAndReplaceField(
+            value,
+            columnId,
+            value.columnId === "palette" ? undefined : value.columnId
+        );
+    };
 
     const handleDragEnd = (event: DragEndEvent): void => {
-        handleRemoveDraggableId();
+        handleRemoveDraggableItem();
         if (event.over === null) {
             return;
         }
-        const { data } = event.active;
+        const { data, id } = event.active;
         const overId = String(event.over.id);
+        const activeId = String(id);
+
+        if (overId.includes("grid")) return handleGridDrop(event);
+        if (overId.includes("col") && !activeId.includes("col"))
+            return handleColumnDrop(event);
 
         const centerDrop = event.over.rect.left + event.over.rect.width / 2;
         const variant = checkSideTypeByItemAndCenterPosition(event, centerDrop);
-
-        if (isComponentConfigWithState(data.current?.data)) {
-            const config = Object.entries(callbackDict).find(([key]) =>
-                overId.includes(key)
-            );
-            if (!config) return;
-            const [_, callback] = config;
-
-            callback(
-                data.current.data,
-                event.over,
-                data.current.data.position > 0
-                    ? data.current.data.position
-                    : undefined,
-                variant
-            );
-        }
     };
 
     return {
         handleDragEnd,
         handleDragStart,
-        handleRemoveDraggableId,
+        handleRemoveDraggableItem,
         sensors,
     };
 };

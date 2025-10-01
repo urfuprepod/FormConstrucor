@@ -15,7 +15,7 @@ function App() {
 
     const {
         handleDragEnd,
-        handleRemoveDraggableId,
+        handleRemoveDraggableItem,
         handleDragStart,
         sensors,
     } = useDraggableControl();
@@ -46,7 +46,7 @@ function App() {
                 <DndContext
                     sensors={sensors}
                     onDragStart={handleDragStart}
-                    onDragCancel={handleRemoveDraggableId}
+                    onDragCancel={handleRemoveDraggableItem}
                     onDragEnd={handleDragEnd}
                 >
                     <Col span={6}>

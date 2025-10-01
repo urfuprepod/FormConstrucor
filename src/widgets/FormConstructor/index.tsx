@@ -30,7 +30,7 @@ const FormConstructor: FC<Props> = (props) => {
         formState,
     } = useFormConstructor();
 
-    const activeGrid = grids.find((el) => el.colNumber === null);
+    const activeGrid = grids.find((el) => el.colId === null);
 
     return (
         <>

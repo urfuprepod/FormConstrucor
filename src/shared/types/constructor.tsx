@@ -147,10 +147,9 @@ export type ComponentConfigArray = Array<ComponentConfig>;
 
 export type ComponentConfigWithState<T extends SettingsFieldsStatic> =
     ComponentConfig<T> & {
-        position: number;
         data: Arch<T>;
-        columnId?: string;
-        rowNumber: number;
+        id: string,
+        columnId: string;
     };
 
 export type ComponentConfigWithStateArray = Array<

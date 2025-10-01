@@ -11,7 +11,7 @@ declare global {
     }
 
     interface IConstructorGrid {
-        colNumber: number | null
+        colId: string | null
         id: string
     }
 }
