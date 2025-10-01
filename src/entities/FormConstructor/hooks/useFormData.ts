@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 
 export const useFormData = () => {
     const [flag, setFlag] = useState<boolean>(false);
-    const t = useRef<number | null>(null);
+    const t = useRef<NodeJS.Timeout | null>(null);
 
     const [form] = useForm();
 
@@ -17,5 +17,5 @@ export const useFormData = () => {
         }, 500);
     };
 
-    return {form, updateFormState}
+    return { form, updateFormState };
 };

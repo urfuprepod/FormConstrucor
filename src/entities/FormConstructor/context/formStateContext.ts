@@ -1,7 +1,9 @@
+import type { FormInstance } from "antd";
 import { createContext, useContext } from "react";
 
 interface IFormStateContext {
     updateFormState: (name: string, value: any) => void;
+    form?: FormInstance
 }
 
 export const FormStateContext = createContext<IFormStateContext | undefined>(
@@ -10,6 +12,6 @@ export const FormStateContext = createContext<IFormStateContext | undefined>(
 
 export const useFormStateContext = () => {
     const context = useContext(FormStateContext);
-    if (!context) return { updateFormState: () => {} };
+    if (!context) return { updateFormState: () => {}, };
     return context;
 };

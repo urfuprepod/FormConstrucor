@@ -1,13 +1,16 @@
 import { useFormConstructor } from "@/app/store/useFormConstructor";
-import { Flex } from "antd";
-import React, { useMemo, type FC } from "react";
+import { useMemo, type FC } from "react";
+import FormRow from "../FormRow";
+import { useDroppable } from "@dnd-kit/core";
+import clsx from "clsx";
+import styles from "./style.module.css";
 
 type Props = {
     grid: IConstructorGrid;
 };
 const FormGrid: FC<Props> = (props) => {
     const { grid } = props;
-    const { cols } = useFormConstructor();
+    const { cols, activeDraggableItem } = useFormConstructor();
 
     const parsedColumns = useMemo(() => {
         const parsed = cols.reduce(
@@ -25,13 +28,27 @@ const FormGrid: FC<Props> = (props) => {
             },
             {} as Record<string, IConstructorColumn[]>
         );
-
         return Object.entries(parsed).sort((a, b) => +a[0] - +b[0]);
     }, [cols, grid]);
 
-    return <Flex vertical>
-        
-    </Flex>;
+    const { setNodeRef, isOver } = useDroppable({
+        id: `grid-${grid.id}`,
+        disabled: activeDraggableItem.type !== "col",
+        data: {
+            item: grid,
+        },
+    });
+
+    return (
+        <div
+            className={clsx(styles.container, { [styles.active]: isOver })}
+            ref={setNodeRef}
+        >
+            {parsedColumns.map(([key, columns]) => (
+                <FormRow rowIndex={+key} columns={columns} key={key} />
+            ))}
+        </div>
+    );
 };
 
 export default FormGrid;

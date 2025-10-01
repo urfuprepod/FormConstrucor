@@ -8,50 +8,35 @@ import styles from "./styles.module.css";
 import clsx from "clsx";
 import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 import FormCol from "../FormCol";
+import { useFormStateContext } from "../../context/formStateContext";
 
 type Props = {
     rowIndex: number;
-    rowComponents: ComponentConfigWithStateArray;
-    form: FormInstance;
-    activePositionNumber: number | null;
-    onPickFieldActive: (val: number) => void;
-    activeDraggableId: string | null;
-
     columns: IConstructorColumn[];
 };
 
 const FormRow: FC<Props> = (props) => {
-    const { removeField } = useFormConstructor();
+    const { formState, fields, activeDraggableItem } = useFormConstructor();
     const {
-        rowComponents,
         rowIndex,
-        form,
-        onPickFieldActive,
-        activePositionNumber,
-        activeDraggableId,
-
         columns,
     } = props;
 
     const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
     const zoneRef = useRef<HTMLDivElement>(null);
-    const [isDisabledRow, setIsDisabledRow] = useState<boolean>(false);
 
     const { isOver, setNodeRef } = useDroppable({
         id: `row-${rowIndex}`,
-        disabled: isDisabledRow,
+        disabled: activeDraggableItem.type !== 'col',
     });
 
     useEffect(() => {
         if (!isOver) {
             setHoverSide(null);
-            setIsDisabledRow(false);
         }
     }, [isOver]);
 
-    // const sortedItems = useMemo(() => {
-    //     return [...rowComponents].sort((a, b) => a.position - b.position);
-    // }, [rowComponents]);
+    const { form } = useFormStateContext();
 
     const combinedRef = (element: HTMLDivElement | null) => {
         setNodeRef(element);
@@ -81,7 +66,6 @@ const FormRow: FC<Props> = (props) => {
 
         onDragEnd() {
             setHoverSide(null);
-            setIsDisabledRow(false);
         },
     });
 
@@ -99,11 +83,14 @@ const FormRow: FC<Props> = (props) => {
         };
     }, [columns]);
 
+    if (!form) return null;
     return (
         <div
             key={rowIndex}
-            // gutter={[formState.gap, formState.gap]}
-            style={{ gridTemplateColumns: columnsConfig.gridStyle }}
+            style={{
+                gridTemplateColumns: columnsConfig.gridStyle,
+                gap: formState.gap,
+            }}
             ref={combinedRef}
             className={clsx(styles["draggable-container"], {
                 [styles.over]: isOver,
@@ -112,7 +99,12 @@ const FormRow: FC<Props> = (props) => {
             })}
         >
             {columnsConfig.sortedColumns.map((col) => (
-                <FormCol column={col} key={col.id} />
+                <FormCol
+                    column={col}
+                    form={form}
+                    field={fields.find((el) => el.columnId === col.id)!}
+                    key={col.id}
+                />
             ))}
 
             {/* {sortedItems.map((config, id) => (

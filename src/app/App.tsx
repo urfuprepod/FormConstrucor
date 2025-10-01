@@ -1,5 +1,4 @@
 import "@ant-design/v5-patch-for-react-19";
-import { useActiveField } from "../entities/FormConstructor/hooks";
 import { Col, ConfigProvider, Row, Spin } from "antd";
 import "./main.css";
 import { useMemo, useRef, useState } from "react";
@@ -8,11 +7,11 @@ import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { useDraggableControl } from "@/shared/hooks";
 import { OverlayItem } from "@/entities/FormConstructor/components";
 import { FormConstructor, SettingsEditor, ComponentPalette } from "@/widgets";
+import OrderContainer from "@/entities/Palette/components/OrderContainer";
 
 function App() {
     const ref = useRef<HTMLDivElement>(null);
 
-    const [activePositionNumber, setActivePositionNumber] = useActiveField(ref);
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
     const {
@@ -20,10 +19,9 @@ function App() {
         handleRemoveDraggableId,
         handleDragStart,
         sensors,
-        activeDraggableId,
     } = useDraggableControl();
 
-    const { fields } = useFormConstructor();
+    const { fields, activePositionNumber } = useFormConstructor();
 
     const activeField = useMemo(() => {
         let result = undefined;
@@ -61,9 +59,6 @@ function App() {
                             isDisabled={false}
                             isEditMode={isEditMode}
                             toggleEditMode={setIsEditMode}
-                            activePositionNumber={activePositionNumber}
-                            onPickFieldActive={setActivePositionNumber}
-                            activeDraggableId={activeDraggableId}
                         />
                     </Col>
 

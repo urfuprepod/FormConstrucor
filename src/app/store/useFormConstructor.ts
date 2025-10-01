@@ -22,6 +22,11 @@ import type { DraggableType } from "@/shared/types/draggable";
 import { checkActualValue } from "@/shared/types/formState";
 import { create } from "zustand";
 
+type DraggableItem = {
+    type: null | "field" | "grid" | "col";
+    id: null | string;
+};
+
 interface IFormConstructorState {
     fields: ComponentConfigWithStateArray;
     updateConfig: <
@@ -58,16 +63,27 @@ interface IFormConstructorState {
     rowNumber: number;
     formState: FormState;
     mutate: <K extends FieldType>(key: string, type: K, val: unknown) => void;
-
-    cols: IConstructorColumn[],
-    grids: IConstructorGrid[],
+    cols: IConstructorColumn[];
+    grids: IConstructorGrid[];
+    activePositionNumber: number | null;
+    activeDraggableItem: DraggableItem;
+    updateDraggableItem: (val?: DraggableItem) => void;
+    updatePositionNumber: (val?: number) => void;
 }
 
 export const useFormConstructor = create<IFormConstructorState>((set) => ({
     fields: [],
     rowNumber: 0,
     cols: [],
-    grids: [{colNumber: null, id: 'sex'}],
+    grids: [{ colNumber: null, id: "sex" }],
+    activeDraggableItem: { type: null, id: null },
+    activePositionNumber: null,
+    updateDraggableItem: (val) => {
+        set(() => ({ activeDraggableItem: val ?? { type: null, id: null } }));
+    },
+    updatePositionNumber(val) {
+        set(() => ({ activePositionNumber: val ?? null }));
+    },
     updateConfig: <
         T extends keyof ComponentConfig<SettingsFieldsStatic>["config"]
     >(
@@ -132,7 +148,7 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
                     ? state.fields.length
                     : state.fields.length + 1;
 
-             console.log(actualPosition, positionData?.oldPositionId)
+            console.log(actualPosition, positionData?.oldPositionId);
             const newFieldItem = {
                 ...config,
                 position: actualPosition,
