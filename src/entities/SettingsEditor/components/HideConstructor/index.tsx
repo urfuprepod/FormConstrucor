@@ -16,7 +16,7 @@ type Props = {
     updateConfig: <
         T extends keyof ComponentConfig<SettingsFieldsStatic>["config"]
     >(
-        positionNumber: number,
+        fieldId: string,
         key: T,
         val: ComponentConfig<SettingsFieldsStatic>["config"][T]
     ) => void;
@@ -33,14 +33,14 @@ const HideConstructor: FC<Props> = (props) => {
 
     const parsedOptionsFromFields = useMemo<IOption[]>(() => {
         return fields.filterMap(
-            (item) => item.position !== activeItem.position && !!item.data.name,
+            (item) => item.id !== activeItem.id && !!item.data.name,
             (el) => ({ label: el.data.label, value: el.data.name })
         );
     }, [activeItem, fields]);
 
     useEffect(() => {
         if (fieldItem && fieldVariant) {
-            updateConfig(activeItem.position, "hide", {
+            updateConfig(activeItem.id, "hide", {
                 type: fieldVariant,
                 field: fieldItem.data.name,
                 value: equalValue,

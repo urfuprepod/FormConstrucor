@@ -7,8 +7,6 @@ import {
 import {
     getSettingsValues,
     generateLabelName,
-    findActualIndexOnFields,
-    mutatePositionNeighbours,
     editAddItemToArrayWithIdConstructor,
 } from "@/shared/methods";
 import { v4 as uuidv4 } from "uuid";

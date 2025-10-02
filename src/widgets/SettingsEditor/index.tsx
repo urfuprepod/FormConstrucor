@@ -13,7 +13,9 @@ import {
 } from "@/shared/types/constructor";
 import { Form } from "antd";
 import { useForm, type FormInstance } from "antd/es/form/Form";
+import { X } from "lucide-react";
 import { useEffect, useState, type FC } from "react";
+import styles from "./styles.module.css";
 
 type Props = {
     activeItem: ComponentConfigWithStateArray[number];
@@ -25,7 +27,7 @@ const SettingsEditor: FC<Props> = (props) => {
     const { activeItem } = props;
 
     const onValuesChange = (_: any, allValues: Arch<SettingsFieldsStatic>) => {
-        updateField(activeItem.position, allValues);
+        updateField(activeItem.id, allValues);
     };
 
     const joined = [...commonProps, ...activeItem.settings];
@@ -36,13 +38,14 @@ const SettingsEditor: FC<Props> = (props) => {
             ...activeItem.data,
         });
         setLocalData(activeItem.data);
-    }, [activeItem.position]);
+    }, [activeItem.id]);
 
     const [localData, setLocalData] = useState<Arch<SettingsFieldsStatic>>(
         activeItem.data
     );
 
-    const { fields, updateConfig, updateField } = useFormConstructor();
+    const { fields, updateConfig, updateField, updateFieldId } =
+        useFormConstructor();
 
     return (
         <Form<Arch<SettingsFieldsStatic>>
@@ -53,7 +56,11 @@ const SettingsEditor: FC<Props> = (props) => {
                 ...getSettingsValues(joined),
                 ...activeItem.data,
             }}
+            className={styles.form}
         >
+            <button onClick={() => updateFieldId()} className={styles.close}>
+                <X size={24} color="red" />
+            </button>
             {joined.map((field) => (
                 <Form.Item
                     name={field.propertyName}
