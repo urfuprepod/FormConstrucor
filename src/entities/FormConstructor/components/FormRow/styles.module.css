@@ -3,6 +3,9 @@
     padding: 20px;
     transition: transform 0.3s ease;
     display: grid;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
 
     &.over {
         opacity: 0.7;
@@ -17,6 +20,3 @@
     }
 }
 
-.draggable-container.over {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}

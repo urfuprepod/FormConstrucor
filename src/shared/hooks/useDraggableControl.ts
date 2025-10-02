@@ -1,4 +1,5 @@
 import { useFormConstructor } from "@/app/store/useFormConstructor";
+import { v4 as uuidv4 } from "uuid";
 import {
     MouseSensor,
     TouchSensor,
@@ -7,15 +8,8 @@ import {
     type DragEndEvent,
     type DragStartEvent,
 } from "@dnd-kit/core";
-import {
-    isComponentConfigWithState,
-    type ComponentConfigWithState,
-    type SettingsFieldsStatic,
-} from "../types/constructor";
-import {
-    checkSideTypeByItemAndCenterPosition,
-    findPreIndexOnRowPush,
-} from "../methods";
+import { isComponentConfigWithState } from "../types/constructor";
+import { checkSideTypeByItemAndCenterPosition } from "../methods";
 import {
     isDraggableItem,
     isValidToUpdateCol,
@@ -26,9 +20,10 @@ export const useDraggableControl = () => {
     const {
         pushAndReplaceField,
         updateDraggableItem,
-        fields,
         updateCol,
         updateGrid,
+        refreshCol,
+        pushOnRow,
     } = useFormConstructor();
 
     const handleDragStart = (event: DragStartEvent): void => {
@@ -66,11 +61,13 @@ export const useDraggableControl = () => {
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
         // сценарий добавления новой колонки
-        const gridId = identificator.split("-").at(-1);
+        const gridId = identificator.split("-")[1];
+        console.log('упало в грид', id)
+
         if (id === "col") {
             return updateCol({ gridId });
         }
-        const currentColId = id.split("-").at(-1);
+        const currentColId = id.split("-")[1];
         // сценарий мутации старой колонки
         if (isValidToUpdateCol(data)) {
             updateCol(data, currentColId);
@@ -78,25 +75,44 @@ export const useDraggableControl = () => {
     };
 
     const handleColOnColRefresh = (event: DragEndEvent): void => {
-        const { data, id } = event.active;
+        const { id } = event.active;
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
+        const targetColumnId = identificator.split("-")[1];
+        if (!targetColumnId) return;
+        const columnId = event.active.id.toString().split("-")[1];
+        refreshCol(targetColumnId, columnId);
+    };
+
+    // нельзя запушить в строку, если в ней нет элементов - строка просто не будет показываться
+    const handleRowDrop = (
+        event: DragEndEvent,
+        direction: DraggableType
+    ): void => {
+        const { id } = event.active;
+        const identificator = event.over?.id;
+        if (typeof id !== "string" || typeof identificator !== "string") return;
+        const gridId = identificator.split("-")[1];
+        if (!gridId) return;
+        const columnId = event.active.id.toString().split("-")[1];
+        pushOnRow(direction, gridId, columnId);
     };
 
     const handleColumnDrop = (event: DragEndEvent): void => {
         const { data, id } = event.active;
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
-        const columnId = identificator.split("-").at(-1);
+        const columnId = identificator.split("-")[1];
         if (!columnId) return;
 
         // добавляем сетку в колонку
         if (id === "grid") {
             return updateGrid({
-                id: new Date().toISOString(),
+                id: uuidv4(),
                 colId: columnId,
             });
         }
+        // добавляем поле в колонку
         if (!isComponentConfigWithState(data.current?.data)) return;
         const value = data.current.data;
         pushAndReplaceField(
@@ -116,11 +132,16 @@ export const useDraggableControl = () => {
         const activeId = String(id);
 
         if (overId.includes("grid")) return handleGridDrop(event);
-        if (overId.includes("col") && !activeId.includes("col"))
-            return handleColumnDrop(event);
+        if (overId.includes("col")) {
+            const isRefreshCol = activeId.includes("col");
+            return isRefreshCol
+                ? handleColOnColRefresh(event)
+                : handleColumnDrop(event);
+        }
 
         const centerDrop = event.over.rect.left + event.over.rect.width / 2;
         const variant = checkSideTypeByItemAndCenterPosition(event, centerDrop);
+        handleRowDrop(event, variant)
     };
 
     return {

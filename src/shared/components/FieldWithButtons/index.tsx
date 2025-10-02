@@ -10,7 +10,7 @@ import { Col, type FormInstance } from "antd";
 import HiddenContainer from "../HiddenContainer";
 import { MAX_COLUMNS } from "@/shared/constants";
 import { useFormConstructor } from "@/app/store/useFormConstructor";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useDraggable } from "@dnd-kit/core";
 import clsx from "clsx";
 
 type Props<T extends SettingsFieldsStatic> = {
@@ -19,27 +19,13 @@ type Props<T extends SettingsFieldsStatic> = {
     form?: FormInstance;
     componentConfiguration: ComponentConfigWithState<T>;
     isPaletteMode?: boolean;
-    isDisabled?: boolean;
-    activeDraggableId?: string | null;
 };
 
 const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
-    const {
-        componentConfiguration,
-        buttonsBlock,
-        form,
-        isPaletteMode,
-        activeDraggableId,
-        isDisabled,
-        style,
-    } = props;
+    const { componentConfiguration, buttonsBlock, form, isPaletteMode, style } =
+        props;
 
-    const {
-        Component,
-        data: fieldValues,
-        config,
-        position: id,
-    } = componentConfiguration;
+    const { Component, data: fieldValues, config, id } = componentConfiguration;
 
     const value = config.hide?.field
         ? form?.getFieldValue(config.hide.field)
@@ -77,7 +63,6 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         );
     }, [formState.columnLength, fieldValues.columnsLength, isPaletteMode]);
 
-    
     const {
         setNodeRef: setDraggableRef,
         isDragging,
@@ -90,18 +75,6 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         },
     });
 
-    const { setNodeRef: setDroppableRef, isOver } = useDroppable({
-        id: fieldId,
-        disabled: isDisabled || isPaletteMode,
-        data: {
-        },
-    });
-
-    const ref = (node: HTMLElement | null) => {
-        setDraggableRef(node);
-        setDroppableRef(node);
-    };
-
     return (
         <Col span={actualColumnLength}>
             <ComponentWithButtons
@@ -112,17 +85,13 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
                 buttonsBlock={buttonsBlock}
             >
                 <div
-                    ref={ref}
+                    ref={setDraggableRef}
                     {...attributes}
                     {...listeners}
                     className={clsx(styles["draggable-element"], {
                         [styles.draggable]: isDragging,
                     })}
                 >
-                    {isOver && fieldId !== activeDraggableId && (
-                        <div className={styles["spray"]} />
-                    )}
-
                     <HiddenContainer isHidden={isHidden}>
                         <FormFieldFabric
                             Component={Component}

@@ -4,6 +4,7 @@
     background: #f0f4fd;
     transition: all 0.2s ease;
     position: relative;
+    padding: 2%;
 
     .plus {
         top: 10%;

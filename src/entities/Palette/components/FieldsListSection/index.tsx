@@ -2,7 +2,6 @@ import { Flex } from "antd";
 import PaletteItem from "../PaletteItem";
 import { fieldsList } from "@/entities/FormConstructor/config";
 import type { ComponentConfig } from "@/shared/types/constructor";
-import { useFormConstructor } from "@/app/store/useFormConstructor";
 import styles from "./styles.module.css";
 import type { FC } from "react";
 
@@ -13,7 +12,7 @@ type Props = {
 const FieldsListSection: FC<Props> = (props) => {
     const { ref } = props;
 
-    const { pushAndReplaceField, unshiftNewField } = useFormConstructor();
+    // const { pushAndReplaceField, unshiftNewField } = useFormConstructor();
 
     return (
         <Flex vertical ref={ref} gap={12} className={styles.palette}>
@@ -22,8 +21,8 @@ const FieldsListSection: FC<Props> = (props) => {
                     key={i}
                     config={cfg as ComponentConfig<typeof cfg.settings>}
                     orderNumber={i}
-                    onPushField={pushAndReplaceField}
-                    onUnshiftField={unshiftNewField}
+                    // onPushField={pushAndReplaceField}
+                    // onUnshiftField={unshiftNewField}
                 />
             ))}
         </Flex>

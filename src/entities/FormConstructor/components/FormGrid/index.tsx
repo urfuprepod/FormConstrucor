@@ -4,7 +4,6 @@ import FormRow from "../FormRow";
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import styles from "./style.module.css";
-import { Plus } from "lucide-react";
 
 type Props = {
     grid: IConstructorGrid;
@@ -64,7 +63,12 @@ const FormGrid: FC<Props> = (props) => {
                 </svg>
             </span>
             {parsedColumns.map(([key, columns]) => (
-                <FormRow rowIndex={+key} columns={columns} key={key} />
+                <FormRow
+                    rowIndex={+key}
+                    gridId={grid.id}
+                    columns={columns}
+                    key={key}
+                />
             ))}
         </div>
     );

@@ -11,6 +11,7 @@ import {
     mutatePositionNeighbours,
     editAddItemToArrayWithIdConstructor,
 } from "@/shared/methods";
+import { v4 as uuidv4 } from "uuid";
 import type {
     Arch,
     ComponentConfig,
@@ -58,7 +59,11 @@ interface IFormConstructorState {
     activeDraggableItem: DraggableItem;
     updateDraggableItem: (val?: DraggableItem) => void;
     updateFieldId: (val?: string) => void;
-
+    pushOnRow: (
+        direction: DraggableType,
+        gridId: string,
+        columnId?: string
+    ) => void;
     updateCol: (
         colData: Partial<IConstructorColumn>,
         currentColId?: string
@@ -68,14 +73,14 @@ interface IFormConstructorState {
     updateGrid: (gridData: IConstructorGrid, currentGridId?: string) => void;
 }
 
-export const useFormConstructor = create<IFormConstructorState>((set) => ({
+export const useFormConstructor = create<IFormConstructorState>((set, get) => ({
     fields: [],
     rowNumber: 0,
     cols: [],
     updateCol(colData, currentColId) {
         set((state) => {
             const defaultNewItem = {
-                id: String(new Date().toLocaleTimeString()),
+                id: uuidv4(),
                 gridId: String(colData.gridId),
                 rowNumber: 1,
                 sectionWidth: 1,
@@ -148,57 +153,100 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
             };
         });
     },
+    pushOnRow(direction: DraggableType, gridId: string, columnId?: string) {
+        const targetColumn = get().cols.reduce(
+            (acc: IConstructorColumn, cur: IConstructorColumn) => {
+                switch (direction) {
+                    case "startRow":
+                        return cur.orderNumber < acc.orderNumber ? cur : acc;
+
+                    case "endRow":
+                        return cur.orderNumber > acc.orderNumber ? cur : acc;
+
+                    default:
+                        return acc;
+                }
+            },
+            get().cols[0]
+        );
+        if (direction === "startRow") {
+            return get().refreshCol(targetColumn.id, columnId);
+        }
+        if (!columnId) {
+            return set((state) => ({
+                cols: state.cols.concat({
+                    gridId,
+                    orderNumber: targetColumn.orderNumber + 1,
+                    id: uuidv4(),
+                    sectionWidth: 1,
+                    rowNumber: 1,
+                }),
+            }));
+        }
+        const currentOrderNumber = get().cols.find(
+            (col) => col.id == columnId
+        )!.orderNumber;
+        set((state) => ({
+            cols: state.cols.map((el) =>
+                el.id === columnId
+                    ? { ...el, orderNumber: targetColumn.orderNumber + 1 }
+                    : el.gridId === gridId &&
+                      el.orderNumber > currentOrderNumber
+                    ? { ...el, orderNumber: el.orderNumber - 1 }
+                    : el
+            ),
+        }));
+    },
     refreshCol(targetColumnId, columnId) {
-        set((state) => {
-            const statedCols = state.cols;
-            const { orderNumber, gridId } = statedCols.find(
-                (el) => el.id === targetColumnId
-            )!;
-            let actualColumns: IConstructorColumn[] = [];
-            if (!columnId) {
-                actualColumns = state.cols
-                    .map((column) =>
-                        column.gridId === gridId
-                            ? {
-                                  ...column,
-                                  orderNumber:
-                                      column.orderNumber >= orderNumber
-                                          ? column.orderNumber + 1
-                                          : column.orderNumber,
-                              }
-                            : column
-                    )
-                    .concat({
-                        gridId,
-                        orderNumber,
-                        id: new Date().toISOString(),
-                        sectionWidth: 1,
-                        rowNumber: 1,
-                    });
-                return { cols: actualColumns };
+        const statedCols = get().cols;
+        const { orderNumber, gridId } = statedCols.find(
+            (el) => el.id === targetColumnId
+        )!;
+        const { gridId: currentGridId, orderNumber: currentOrderNumber } =
+            statedCols.find((el) => el.id === columnId)!;
+        let actualColumns: IConstructorColumn[] = [];
+        for (let i = 0; i < statedCols.length; i++) {
+            const cur = statedCols[i];
+            if (cur.id === columnId) {
+                actualColumns.push({
+                    ...cur,
+                    orderNumber,
+                    gridId,
+                });
+                continue;
             }
-            for (let i = 0; i < statedCols.length; i++) {
-                const cur = statedCols[i];
-                if (cur.id === columnId) {
-                    actualColumns.push({
-                        ...cur,
-                        orderNumber,
-                        gridId,
-                    });
-                    continue;
-                }
-                if (cur.gridId === gridId) {
-                    actualColumns.push({
-                        ...cur,
-                        orderNumber:
-                            cur.orderNumber >= orderNumber
-                                ? cur.orderNumber + 1
-                                : cur.orderNumber,
-                    });
-                    continue;
-                }
-                actualColumns.push(cur);
+            if (cur.gridId === currentGridId) {
+                actualColumns.push({
+                    ...cur,
+                    orderNumber:
+                        cur.orderNumber > currentOrderNumber
+                            ? cur.orderNumber - 1
+                            : cur.orderNumber,
+                });
+                continue;
             }
+            if (cur.gridId === gridId) {
+                actualColumns.push({
+                    ...cur,
+                    orderNumber:
+                        cur.orderNumber >= orderNumber
+                            ? cur.orderNumber + 1
+                            : cur.orderNumber,
+                });
+                continue;
+            }
+            actualColumns.push(cur);
+        }
+        if (!columnId) {
+            actualColumns.push({
+                gridId,
+                orderNumber,
+                id: uuidv4(),
+                sectionWidth: 1,
+                rowNumber: 1,
+            });
+        }
+        set(() => {
             return { cols: actualColumns };
         });
     },
@@ -220,7 +268,7 @@ export const useFormConstructor = create<IFormConstructorState>((set) => ({
             const currentFieldInColumn = state.fields.find(
                 (el) => el.columnId === columnId
             );
-            const newId = new Date().toISOString();
+            const newId = uuidv4();
 
             const newField = {
                 ...config,
