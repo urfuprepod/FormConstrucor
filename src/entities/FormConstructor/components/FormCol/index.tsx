@@ -7,24 +7,24 @@ import clsx from "clsx";
 import { ThumbsUp, Trash2 } from "lucide-react";
 import { type FC } from "react";
 import styles from "./styles.module.css";
+import FormGrid from "../FormGrid";
 
 type Props = {
     column: IConstructorColumn;
     field?: ComponentConfigWithStateArray[number];
     form: FormInstance;
+    grid?: IConstructorGrid;
 };
 
-// в колонке может быть только одно поле формы, лучше передать пропсом, чтобы снизить количество useMemo и подписок на глобал стейт
 const FormCol: FC<Props> = (props) => {
-    const { column, field: config, form } = props;
+    const { column, field: config, form, grid } = props;
 
     const { removeField, activeFieldId, updateFieldId, activeDraggableItem } =
         useFormConstructor();
 
-    const columnId = `col-${column.id}`;
-    const isDisabled =
-        activeDraggableItem.type === "col" &&
-        activeDraggableItem.id === column.id;
+    const columnId = `col/${column.id}`;
+
+    const isDisabled = activeDraggableItem.id === column.id;
 
     const {
         setNodeRef: setDraggableRef,
@@ -54,7 +54,6 @@ const FormCol: FC<Props> = (props) => {
                 [styles.draggable]: isDragging,
             })}
         >
-            член
             {isOver && !isDisabled && <div className={styles["spray"]} />}
 
             {config && (
@@ -96,6 +95,7 @@ const FormCol: FC<Props> = (props) => {
                     }
                 />
             )}
+            {grid && <FormGrid grid={grid} />}
         </div>
     );
 };

@@ -1,6 +1,6 @@
 .draggable-container {
     position: relative;
-    padding: 20px;
+    padding: 10px;
     transition: transform 0.3s ease;
     display: grid;
     background: white;

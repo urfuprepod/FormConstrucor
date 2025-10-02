@@ -9,12 +9,12 @@ import { MoveUp, Plus } from "lucide-react";
 
 type Props<T extends SettingsFieldsStatic> = {
     config: ComponentConfig<T>;
-    onPushField: (field: ComponentConfig<T>) => void;
+    // onPushField: (field: ComponentConfig<T>) => void;
     orderNumber: number;
 };
 
 const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
-    const { config, onPushField,  orderNumber } = props;
+    const { config, orderNumber } = props;
 
     return (
         <FieldWithButton
@@ -26,17 +26,17 @@ const PaletteItem = <T extends SettingsFieldsStatic = []>(props: Props<T>) => {
                     ...commonPropsToObjectForm,
                 },
                 id: `${orderNumber}`,
-                columnId: ''
+                columnId: 'palette'
             }}
             buttonsBlock={
                 <>
-                    <AddButton
+                    {/* <AddButton
                         ariaLabel="push"
                         onClick={() => onPushField(config)}
                         icon={
                             <Plus size={16} color="#ffffff" strokeWidth={1} />
                         }
-                    />
+                    /> */}
                     {/* <AddButton
                         onClick={() => onUnshiftField(config)}
                         icon={

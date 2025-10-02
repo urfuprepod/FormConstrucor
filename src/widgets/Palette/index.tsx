@@ -3,10 +3,13 @@ import {
     EditingItemsSection,
     FieldsListSection,
     OrderContainer,
+    PaletteItem,
 } from "@/entities/Palette/components";
 import React, { useEffect, useRef, useState, type FC } from "react";
 import "./styles.css";
 import { GAP_VALUE } from "@/shared/constants";
+import { fieldsList } from "@/entities/FormConstructor/config";
+import type { ComponentConfig } from "@/shared/types/constructor";
 
 type Props = {
     isEditMode: boolean;

@@ -27,7 +27,7 @@ export const useDraggableControl = () => {
     } = useFormConstructor();
 
     const handleDragStart = (event: DragStartEvent): void => {
-        const [activeType, activeId] = (event.active.id as string).split("-");
+        const [activeType, activeId] = (event.active.id as string).split("/");
         updateDraggableItem(
             isDraggableItem(activeType)
                 ? { type: activeType, id: activeId || null }
@@ -61,13 +61,13 @@ export const useDraggableControl = () => {
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
         // сценарий добавления новой колонки
-        const gridId = identificator.split("-")[1];
-        console.log('упало в грид', id)
+        const gridId = identificator.split("/")[1];
+        console.log("упало в грид", id);
 
         if (id === "col") {
             return updateCol({ gridId });
         }
-        const currentColId = id.split("-")[1];
+        const currentColId = id.split("/")[1];
         // сценарий мутации старой колонки
         if (isValidToUpdateCol(data)) {
             updateCol(data, currentColId);
@@ -78,9 +78,9 @@ export const useDraggableControl = () => {
         const { id } = event.active;
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
-        const targetColumnId = identificator.split("-")[1];
+        const targetColumnId = identificator.split("/")[1];
         if (!targetColumnId) return;
-        const columnId = event.active.id.toString().split("-")[1];
+        const columnId = event.active.id.toString().split("/")[1];
         refreshCol(targetColumnId, columnId);
     };
 
@@ -92,9 +92,12 @@ export const useDraggableControl = () => {
         const { id } = event.active;
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
-        const gridId = identificator.split("-")[1];
+
+        console.log(identificator, 'chuvak')
+
+        const gridId = identificator.split("/")[2];
         if (!gridId) return;
-        const columnId = event.active.id.toString().split("-")[1];
+        const columnId = event.active.id.toString().split("/")[1];
         pushOnRow(direction, gridId, columnId);
     };
 
@@ -102,7 +105,7 @@ export const useDraggableControl = () => {
         const { data, id } = event.active;
         const identificator = event.over?.id;
         if (typeof id !== "string" || typeof identificator !== "string") return;
-        const columnId = identificator.split("-")[1];
+        const columnId = identificator.split("/")[1];
         if (!columnId) return;
 
         // добавляем сетку в колонку
@@ -115,6 +118,7 @@ export const useDraggableControl = () => {
         // добавляем поле в колонку
         if (!isComponentConfigWithState(data.current?.data)) return;
         const value = data.current.data;
+        
         pushAndReplaceField(
             value,
             columnId,
@@ -127,7 +131,7 @@ export const useDraggableControl = () => {
         if (event.over === null) {
             return;
         }
-        const { data, id } = event.active;
+        const { id } = event.active;
         const overId = String(event.over.id);
         const activeId = String(id);
 
@@ -141,7 +145,7 @@ export const useDraggableControl = () => {
 
         const centerDrop = event.over.rect.left + event.over.rect.width / 2;
         const variant = checkSideTypeByItemAndCenterPosition(event, centerDrop);
-        handleRowDrop(event, variant)
+        handleRowDrop(event, variant);
     };
 
     return {

@@ -20,7 +20,7 @@ type Props = {
 };
 
 const FormConstructor: FC<Props> = (props) => {
-    const { isDisabled,  isEditMode, toggleEditMode } = props;
+    const { isDisabled, isEditMode, toggleEditMode } = props;
 
     const { form, updateFormState } = useFormData();
 
@@ -28,9 +28,12 @@ const FormConstructor: FC<Props> = (props) => {
         fields: formComponentsState,
         grids,
         formState,
+        activeGridId,
     } = useFormConstructor();
 
-    const activeGrid = grids.find((el) => el.colId === null);
+    const activeGrid = grids.find((el) =>
+        activeGridId ? el.id === activeGridId : el.colId === null
+    );
 
     return (
         <>
@@ -38,6 +41,7 @@ const FormConstructor: FC<Props> = (props) => {
                 isEditMode={isEditMode}
                 toggleEditMode={toggleEditMode}
             />
+
 
             <FormStateContext.Provider value={{ updateFormState, form }}>
                 <Form
@@ -50,16 +54,6 @@ const FormConstructor: FC<Props> = (props) => {
                     wrapperCol={{ span: 8 }}
                 >
                     {activeGrid && <FormGrid grid={activeGrid} />}
-                    {/* {groupedFormComponentsByRowLevel.arrayForm.map(
-                        ([rowIndex, rowComponents]) => (
-                            <FormRow
-                                form={form}
-                                key={rowIndex}
-                                activeDraggableId={activeDraggableId}
-                                rowIndex={rowIndex}
-                            />
-                        )
-                    )} */}
 
                     <FlexInLine gap={8}>
                         <Button

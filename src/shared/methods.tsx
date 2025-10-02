@@ -84,40 +84,6 @@ export const generateLabelName = (): string => {
     return [messages[first], messages[second]].join(" ");
 };
 
-// export const findPreIndexOnRowPush = (
-//     rowNumber: number,
-//     fields: ComponentConfigWithStateArray,
-//     type: DraggableType
-// ): number => {
-//     const filtered = fields.filter((el) => el.rowNumber === rowNumber);
-//     if (!filtered.length) return fields.length;
-//     let preIndex =
-//         filtered
-//             .sort((a, b) => a.position - b.position)
-//             .at(type === "startRow" ? 0 : -1)?.position ?? -1;
-//     return preIndex;
-// };
-
-export const findActualIndexOnFields = (
-    preIndex: number,
-    type: DraggableType,
-    oldPosition?: number
-) => {
-    if (!oldPosition) {
-        return type === "endRow" ? preIndex + 1 : preIndex;
-    }
-
-    if (oldPosition > preIndex) {
-        return type === "endRow" ? preIndex + 1 : preIndex;
-    }
-
-    if (oldPosition < preIndex) {
-        return type === "endRow" ? preIndex : preIndex - 1;
-    }
-
-    return oldPosition;
-};
-
 export const checkSideTypeByItemAndCenterPosition = <
     T extends { active: Active }
 >(
@@ -127,44 +93,6 @@ export const checkSideTypeByItemAndCenterPosition = <
     const translatedLeft = item.active.rect.current.translated?.left;
     if (!translatedLeft) return "startRow";
     return translatedLeft < centerDrop ? "startRow" : "endRow";
-};
-
-export const mutatePositionNeighbours = (
-    actualPosition: number,
-    neighbourPosition: number,
-    oldPosition?: number
-) => {
-    if (!oldPosition) {
-        if (neighbourPosition < actualPosition) return neighbourPosition;
-        return neighbourPosition + 1;
-    }
-
-    if (oldPosition < actualPosition) {
-        if (neighbourPosition > actualPosition) return neighbourPosition;
-        if (neighbourPosition < oldPosition) return neighbourPosition;
-        if (
-            neighbourPosition >= oldPosition &&
-            neighbourPosition <= actualPosition
-        )
-            return neighbourPosition - 1;
-    }
-
-    if (oldPosition > actualPosition) {
-        if (neighbourPosition < actualPosition) return neighbourPosition;
-        if (neighbourPosition > oldPosition) return neighbourPosition;
-        return neighbourPosition + 1;
-    }
-
-    return neighbourPosition;
-};
-
-export const getElementCenter = (element: HTMLElement) => {
-    const rect = element.getBoundingClientRect();
-
-    return {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2,
-    };
 };
 
 type Edited<T> = {

@@ -20,17 +20,17 @@ function App() {
         sensors,
     } = useDraggableControl();
 
-    const { fields, activePositionNumber } = useFormConstructor();
+    const { fields, activeFieldId } = useFormConstructor();
 
     const activeField = useMemo(() => {
         let result = undefined;
 
-        if (activePositionNumber !== null) {
-            result = fields.find((el) => el.position === activePositionNumber);
+        if (activeFieldId !== null) {
+            result = fields.find((el) => el.id === activeFieldId);
         }
 
         return result;
-    }, [fields, activePositionNumber]);
+    }, [fields, activeFieldId]);
 
     return (
         <ConfigProvider

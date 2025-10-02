@@ -4,6 +4,7 @@ import FormRow from "../FormRow";
 import { useDroppable } from "@dnd-kit/core";
 import clsx from "clsx";
 import styles from "./style.module.css";
+import MagnifierButton from "./MagnifierButton";
 
 type Props = {
     grid: IConstructorGrid;
@@ -32,7 +33,7 @@ const FormGrid: FC<Props> = (props) => {
     }, [cols, grid]);
 
     const { setNodeRef, isOver } = useDroppable({
-        id: `grid-${grid.id}`,
+        id: `grid/${grid.id}`,
         disabled:
             activeDraggableItem.type !== "col" || parsedColumns.length > 0,
         data: {
@@ -48,6 +49,8 @@ const FormGrid: FC<Props> = (props) => {
             })}
             ref={setNodeRef}
         >
+            <MagnifierButton grid={grid} />
+
             <span className={styles.plus}>
                 <svg
                     width="24"

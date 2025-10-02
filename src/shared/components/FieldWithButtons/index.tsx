@@ -31,9 +31,9 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
         ? form?.getFieldValue(config.hide.field)
         : null;
 
-    const fieldId = `field-${id}`;
+    const fieldId = `field/${id}`;
 
-    const identificator = String(isPaletteMode ? `p-${id}` : fieldId);
+    const identificator = String(isPaletteMode ? `p/${id}` : fieldId);
 
     const isHidden = useMemo(() => {
         if (!config.hide) return false;
@@ -76,7 +76,7 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
     });
 
     return (
-        <Col span={actualColumnLength}>
+        // <Col span={actualColumnLength}>
             <ComponentWithButtons
                 className={styles.container}
                 style={{ ...style }}
@@ -100,7 +100,7 @@ const FieldWithButton = <T extends SettingsFieldsStatic>(props: Props<T>) => {
                     </HiddenContainer>
                 </div>
             </ComponentWithButtons>
-        </Col>
+       
     );
 };
 

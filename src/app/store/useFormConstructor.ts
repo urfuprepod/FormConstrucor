@@ -69,14 +69,22 @@ interface IFormConstructorState {
         currentColId?: string
     ) => void;
     refreshCol: (columnId: string, targetColumnId?: string) => void;
-
     updateGrid: (gridData: IConstructorGrid, currentGridId?: string) => void;
+    activeGridId: string | null;
+    updateActiveGrid: (id?: string) => void;
 }
 
 export const useFormConstructor = create<IFormConstructorState>((set, get) => ({
     fields: [],
     rowNumber: 0,
     cols: [],
+    activeGridId: null,
+    updateActiveGrid: (id) => {
+        set((state) => {
+            const isNull = id === undefined || id === state.activeGridId;
+            return { activeGridId: isNull ? null : id };
+        });
+    },
     updateCol(colData, currentColId) {
         set((state) => {
             const defaultNewItem = {
@@ -205,9 +213,24 @@ export const useFormConstructor = create<IFormConstructorState>((set, get) => ({
         const { gridId: currentGridId, orderNumber: currentOrderNumber } =
             statedCols.find((el) => el.id === columnId)!;
         let actualColumns: IConstructorColumn[] = [];
+
+        const min = Math.min(currentOrderNumber, orderNumber);
+        const max = Math.max(currentOrderNumber, orderNumber);
+
         for (let i = 0; i < statedCols.length; i++) {
             const cur = statedCols[i];
             if (cur.id === columnId) {
+                if (gridId === currentGridId) {
+                    actualColumns.push({
+                        ...cur,
+                        orderNumber:
+                            currentOrderNumber > orderNumber
+                                ? orderNumber
+                                : orderNumber - 1,
+                        gridId,
+                    });
+                    continue;
+                }
                 actualColumns.push({
                     ...cur,
                     orderNumber,
@@ -216,6 +239,22 @@ export const useFormConstructor = create<IFormConstructorState>((set, get) => ({
                 continue;
             }
             if (cur.gridId === currentGridId) {
+                if (gridId === currentGridId) {
+                    if (cur.orderNumber < min || cur.orderNumber >= max) {
+                        actualColumns.push(cur);
+                        continue;
+                    }
+
+                    actualColumns.push({
+                        ...cur,
+                        orderNumber:
+                            currentOrderNumber > orderNumber
+                                ? cur.orderNumber + 1
+                                : cur.orderNumber - 1,
+                    });
+                    continue;
+                }
+
                 actualColumns.push({
                     ...cur,
                     orderNumber:
@@ -308,63 +347,6 @@ export const useFormConstructor = create<IFormConstructorState>((set, get) => ({
                       ),
             };
         });
-        // set((state) => {
-        //     const actualPosition =
-        //         pushedOn && rowNumber && positionData?.endPositionId
-        //             ? findActualIndexOnFields(
-        //                   positionData?.endPositionId,
-        //                   pushedOn,
-        //                   positionData.oldPositionId
-        //               )
-        //             : positionData?.oldPositionId
-        //             ? state.fields.length
-        //             : state.fields.length + 1;
-
-        //     console.log(actualPosition, positionData?.oldPositionId);
-        //     const newFieldItem = {
-        //         ...config,
-        //         position: actualPosition,
-        //         rowNumber: rowNumber ?? state.rowNumber + 1,
-        //         data,
-        //     } as ComponentConfigWithState<SettingsFieldsStatic>;
-
-        //     if (positionData?.oldPositionId !== undefined) {
-        //         const { oldPositionId } = positionData;
-        //         return {
-        //             fields: state.fields.map((el) =>
-        //                 el.position === oldPositionId
-        //                     ? {
-        //                           ...el,
-        //                           position: actualPosition,
-        //                           rowNumber: rowNumber ?? state.rowNumber + 1,
-        //                       }
-        //                     : {
-        //                           ...el,
-        //                           position: mutatePositionNeighbours(
-        //                               actualPosition,
-        //                               el.position,
-        //                               oldPositionId
-        //                           ),
-        //                       }
-        //             ),
-        //         };
-        //     }
-
-        //     return {
-        //         fields: [
-        //             ...state.fields.map((el) => ({
-        //                 ...el,
-        //                 position: mutatePositionNeighbours(
-        //                     actualPosition,
-        //                     el.position,
-        //                     undefined
-        //                 ),
-        //             })),
-        //             newFieldItem,
-        //         ],
-        //         rowNumber: rowNumber ? state.rowNumber : state.rowNumber + 1, // если засунули в какую-то конкретную строку, то номер последней строки не изменился
-        //     };
-        // });
     },
     removeField: (columnId: string) => {
         set((state) => {
@@ -372,22 +354,6 @@ export const useFormConstructor = create<IFormConstructorState>((set, get) => ({
                 (field) => field.columnId !== columnId
             );
             return { fields: actualFields };
-
-            // const actualFields = state.fields.reduce(
-            //     (acc: ComponentConfigWithStateArray, cur) => {
-            //         if (cur.position === positionNumber) return acc;
-            //         if (cur.position < positionNumber) return acc.concat(cur);
-            //         if (cur.position > positionNumber)
-            //             return acc.concat({
-            //                 ...cur,
-            //                 position: cur.position - 1,
-            //             });
-            //         return acc;
-            //     },
-            //     []
-            // );
-
-            // return { fields: actualFields };
         });
     },
     updateField: <T extends SettingsFieldsStatic>(

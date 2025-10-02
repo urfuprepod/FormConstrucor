@@ -14,12 +14,13 @@ type Props = {
 };
 
 const FormRow: FC<Props> = (props) => {
-    const { formState, fields, activeDraggableItem } = useFormConstructor();
+    const { formState, fields, activeDraggableItem, grids } =
+        useFormConstructor();
     const { rowIndex, columns, gridId } = props;
 
     const [hoverSide, setHoverSide] = useState<"left" | "right" | null>(null);
     const zoneRef = useRef<HTMLDivElement>(null);
-    const identificator = `row-${rowIndex}-${gridId}`;
+    const identificator = `row/${rowIndex}/${gridId}`;
 
     const { isOver, setNodeRef } = useDroppable({
         id: identificator,
@@ -69,7 +70,7 @@ const FormRow: FC<Props> = (props) => {
         const sorted = [...columns].sort(
             (a, b) => a.orderNumber - b.orderNumber
         );
-        const gridStyle = sorted.map((el) => `${el}fr`).join(" ");
+        const gridStyle = sorted.map((el) => `${el.sectionWidth}fr`).join(" ");
 
         return {
             sortedColumns: [...columns].sort(
@@ -100,6 +101,7 @@ const FormRow: FC<Props> = (props) => {
                     form={form}
                     field={fields.find((el) => el.columnId === col.id)}
                     key={col.id}
+                    grid={grids.find((current) => current.colId === col.id)}
                 />
             ))}
         </div>

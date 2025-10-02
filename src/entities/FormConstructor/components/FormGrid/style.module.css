@@ -5,6 +5,8 @@
     transition: all 0.2s ease;
     position: relative;
     padding: 2%;
+    flex: 1 1 auto;
+    border-radius: 5px;
 
     .plus {
         top: 10%;
@@ -32,9 +34,11 @@
             }
         }
     }
+}
 
-    &.first {
-        flex: 1 1 auto;
-        border-radius: 5px;
-    }
+.loop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
 }
